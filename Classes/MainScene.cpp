@@ -53,10 +53,15 @@ bool MainScene::init() {
 
     Scene::addChild(backGround);
 
+    std::random_device rd;     // only used once to initialise (seed) engine
+    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+    std::uniform_int_distribution<int> uni(0, 30-1); // guaranteed unbiased
 
     field = Field::create();
     field->createField(30);
-    field->addCreature(1,1);
+    for(int i=0;i<200;i++)
+        field->addCreature(uni(rng), uni(rng));
+
 
     field->setAnchorPoint(Vec2(0.5, 0.5));
 
@@ -73,8 +78,6 @@ bool MainScene::init() {
         }
     };
 
-
-
     Director::getInstance()->getOpenGLView()->setIMEKeyboardState(true);
 
     eventListener->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event *event) {
@@ -84,7 +87,21 @@ bool MainScene::init() {
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
 
+
+    auto mouseEvent = EventListenerMouse::create();
+    mouseEvent->onMouseScroll = [=](Event *event) {
+        EventMouse *e = (EventMouse *) event;
+        if (e->getScrollY() > 0)
+            field->scaleBy(0.2, 1.3);
+        else
+            field->scaleBy(0.2, 0.7);
+    };
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
+
+
     this->scheduleUpdate();
+    this->schedule(schedule_selector(Field::gameStep), 0.5f);
 
     return true;
 }
@@ -93,23 +110,23 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
     float time = 0.2;
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
-            field->moveBy(Vec2(0, 10), time);
-            break;
-        case EventKeyboard::KeyCode::KEY_S:
             field->moveBy(Vec2(0, -10), time);
             break;
+        case EventKeyboard::KeyCode::KEY_S:
+            field->moveBy(Vec2(0, 10), time);
+            break;
         case EventKeyboard::KeyCode::KEY_A:
-            field->moveBy(Vec2(-10, 0), time);
+            field->moveBy(Vec2(10, 0), time);
             break;
         case EventKeyboard::KeyCode::KEY_D:
-            field->moveBy(Vec2(10, 0), time);
+            field->moveBy(Vec2(-10, 0), time);
             break;
 
         case EventKeyboard::KeyCode::KEY_EQUAL:
-            field->scaleBy(time,1.1);
+            field->scaleBy(time, 1.1);
             break;
         case EventKeyboard::KeyCode::KEY_MINUS:
-            field->scaleBy(time,0.9);
+            field->scaleBy(time, 0.9);
             break;
 
         case EventKeyboard::KeyCode::KEY_ESCAPE:

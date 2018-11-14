@@ -13,29 +13,35 @@
 #define MAX_SCALE 8.0
 #define MIN_SCALE 0.05
 
-class Field : public cocos2d::Node
-{
+class Field : public cocos2d::Node {
 public:
     CREATE_FUNC(Field);
+
     virtual bool init();
+
     virtual void onEnter();
+
     virtual void update(float dt) override;
+
     void moveBy(cocos2d::Vec2 vec, float secs);
+
     void scaleBy(float duration, float scaleFactor);
 
+    void gameStep(float dt);
+
     void createField(int n);
+
     void addCreature(int x, int y);
 
 private:
     // Constructor private to make misuse of this class difficult.
     Field();    // Constructor declared but defined in the cpp file.
-    ~Field(){}  // Destructor declared and defined here.
+    ~Field() {}  // Destructor declared and defined here.
 
     int tileSize = 60;
-    float myFloatVar;
-    int myIntVar;
+    int n;
     float currentScale = 1.0;
-    static std::vector<Creature*> creatures;
+    static std::vector<Creature *> creatures;
 
 };
 

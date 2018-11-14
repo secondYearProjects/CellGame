@@ -17,18 +17,16 @@ bool Field::init() {
     return true;
 }
 
-void Field::createField(int n) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+void Field::createField(int _n) {
+    this->n = _n;
+    for (int i = 0; i < _n; i++) {
+        for (int j = 0; j < _n; j++) {
             auto spriteTmp = Sprite::create("dibilcell.png");
 
             this->addChild(spriteTmp);
             spriteTmp->setAnchorPoint(Vec2(0, 0));
             spriteTmp->setPosition(Vec2(j * tileSize, i * tileSize));
             spriteTmp->setScale(tileSize / spriteTmp->getContentSize().width);
-            //spriteTmp->setAnchorPoint(Vec2(0,0));
-
-
         }
     }
 }
@@ -54,15 +52,22 @@ void Field::scaleBy(float duration, float scaleFactor) {
 }
 
 void Field::addCreature(int x, int y) {
-    auto newCreature = Creature::createCreatureSprite(Vec2(x*tileSize,y*tileSize),"character.png");
+    auto newCreature = Creature::createCreatureSprite(x, y, tileSize, n, "character.png");
 
     newCreature->setScale(tileSize / newCreature->getContentSize().width);
-    newCreature->setAnchorPoint(Vec2(0,0));
+    newCreature->setAnchorPoint(Vec2(0, 0));
 
     addChild(newCreature);
+    creatures.push_back(newCreature);
 
 }
 
+void Field::gameStep(float dt) {
+    for (auto creature:creatures) {
+        creature->manage();
+    }
+}
 
-std::vector<Creature*> Field::creatures;
+
+std::vector<Creature *> Field::creatures;
 

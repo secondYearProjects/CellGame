@@ -7,13 +7,14 @@
 
 #include "cocos2d.h"
 
+
 class Creature : public cocos2d::Sprite {
 public:
     CREATE_FUNC(Creature);
 
     virtual bool init();
 
-    static Creature* createCreatureSprite(cocos2d::Vec2 position, std::string path);
+    static Creature *createCreatureSprite(int x, int y, int tileSize, int n, std::string path);
 
     virtual void onEnter();
 
@@ -23,11 +24,27 @@ public:
 
     void moveTo(cocos2d::Vec2 vec, float secs);
 
+    void setX(int _x) { x = _x; }
+
+    void setY(int _y) { y = _y; }
+
+    void setN(int _n) { n = _n; }
+
+    void setTielSize(int _tileSize) { tileSize = _tileSize; }
+
+    virtual void manage();
+
+    void walk(int _x, int _y);
 
 private:
 // Constructor private to make misuse of this class difficult.
     Creature();    // Constructor declared but defined in the cpp file.
     ~Creature() {}  // Destructor declared and defined here.
+
+    int x, y;
+    int tileSize;
+    int n;
+    int health = 100;
 };
 
 
