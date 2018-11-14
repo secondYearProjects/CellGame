@@ -57,7 +57,7 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
 void Creature::walk(int _x, int _y) {
     if (x + _x < 0 || y + _y < 0)
         return;
-    if (x + _x > n-1 || y + _y > n-1)
+    if (x + _x > n - 1 || y + _y > n - 1)
         return;
 
     runAction(MoveBy::create(0.2, Vec2(_x * tileSize, _y * tileSize)));
@@ -74,6 +74,17 @@ void Creature::manage() {
     int _y = uni(rng);
     walk(_x, _y);
 
+}
+
+void Creature::deathAnimation() {
+    setAnchorPoint(Vec2(0.5, 0.5));
+    moveBy(Vec2(tileSize / 2, tileSize / 2), 0);
+    runAction(ScaleBy::create(5.0, 0.0));
+
+}
+
+void Creature::setPicture(std::string path) {
+    setTexture("deadChar.png");
 }
 
 

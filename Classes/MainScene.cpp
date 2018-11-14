@@ -101,7 +101,7 @@ bool MainScene::init() {
 
 
     this->scheduleUpdate();
-    this->schedule(schedule_selector(Field::gameStep), 0.5f);
+    this->schedule(schedule_selector(Field::gameStep), tickTime);
 
     return true;
 }

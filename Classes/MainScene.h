@@ -49,6 +49,8 @@ public:
 
 private:
     Field *field;
+    float tickTime = 1.0f;
+
     static std::map<cocos2d::EventKeyboard::KeyCode,
             std::chrono::high_resolution_clock::time_point> keys;
 

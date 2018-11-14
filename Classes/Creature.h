@@ -32,6 +32,16 @@ public:
 
     void setTielSize(int _tileSize) { tileSize = _tileSize; }
 
+    void deathAnimation();
+
+    void setPicture(std::string path);
+
+    int getX() const { return x; }
+    int getY() const { return y; }
+    int getN() const { return n; }
+    int getTitleSize() const { return tileSize; }
+
+
     virtual void manage();
 
     void walk(int _x, int _y);

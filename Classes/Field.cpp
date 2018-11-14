@@ -21,9 +21,10 @@ void Field::createField(int _n) {
     this->n = _n;
     for (int i = 0; i < _n; i++) {
         for (int j = 0; j < _n; j++) {
-            auto spriteTmp = Sprite::create("dibilcell.png");
+            auto spriteTmp = Sprite::create("grass.png");
 
             this->addChild(spriteTmp);
+            spriteTmp->setZOrder(-10);
             spriteTmp->setAnchorPoint(Vec2(0, 0));
             spriteTmp->setPosition(Vec2(j * tileSize, i * tileSize));
             spriteTmp->setScale(tileSize / spriteTmp->getContentSize().width);
@@ -66,7 +67,27 @@ void Field::gameStep(float dt) {
     for (auto creature:creatures) {
         creature->manage();
     }
+    for (auto creature:creatures) {
+        int x = creature->getX();
+        int y = creature->getY();
+
+        // TODO: here
+        creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
+            if (enemy != creature && x == enemy->getX() && y == enemy->getY()){
+                //enemy->deathAnimation();
+                //enemy->removeFromParent();
+                enemy->setTexture("deadChar.png");
+                enemy->deathAnimation();
+                enemy->setZOrder(-1);
+                return true;
+            }
+            return false;
+        }), creatures.end());
+
+    }
 }
+
+
 
 
 std::vector<Creature *> Field::creatures;
