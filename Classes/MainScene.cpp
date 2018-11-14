@@ -56,6 +56,8 @@ bool MainScene::init() {
 
     field = Field::create();
     field->createField(30);
+    field->addCreature(1,1);
+
     field->setAnchorPoint(Vec2(0.5, 0.5));
 
 

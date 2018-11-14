@@ -44,8 +44,6 @@ void Field::moveBy(Vec2 vec, float secs) {
 
 void Field::update(float dt) {
     Node::update(dt);
-
-
 }
 
 void Field::scaleBy(float duration, float scaleFactor) {
@@ -55,6 +53,16 @@ void Field::scaleBy(float duration, float scaleFactor) {
     }
 }
 
+void Field::addCreature(int x, int y) {
+    auto newCreature = Creature::createCreatureSprite(Vec2(x*tileSize,y*tileSize),"character.png");
+
+    newCreature->setScale(tileSize / newCreature->getContentSize().width);
+    newCreature->setAnchorPoint(Vec2(0,0));
+
+    addChild(newCreature);
+
+}
 
 
+std::vector<Creature*> Field::creatures;
 

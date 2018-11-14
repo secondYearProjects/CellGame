@@ -6,6 +6,9 @@
 #define TEMPLATECPP_FIELD_H
 
 #include "cocos2d.h"
+#include "Creature.h"
+
+#include <vector>
 
 #define MAX_SCALE 8.0
 #define MIN_SCALE 0.05
@@ -21,6 +24,7 @@ public:
     void scaleBy(float duration, float scaleFactor);
 
     void createField(int n);
+    void addCreature(int x, int y);
 
 private:
     // Constructor private to make misuse of this class difficult.
@@ -31,6 +35,8 @@ private:
     float myFloatVar;
     int myIntVar;
     float currentScale = 1.0;
+    static std::vector<Creature*> creatures;
+
 };
 
 
