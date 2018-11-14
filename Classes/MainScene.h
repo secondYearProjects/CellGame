@@ -26,19 +26,29 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "Field.h"
 
-class HelloWorld : public cocos2d::Scene
+class MainScene : public cocos2d::Scene
 {
 public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
-    
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-    
+    void update(float dt) override;
+
+
+    void onWASD(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+
     // implement the "static create()" method manually
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(MainScene);
+
+
+
+
+private:
+    Field *field;
 };
+
+
 
 #endif // __HELLOWORLD_SCENE_H__
