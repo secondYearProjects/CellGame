@@ -13,21 +13,19 @@ Field::Field() {
 bool Field::init() {
     if (!Node::init())
         return false;
-    createField();
 
     return true;
 }
 
-void Field::createField() {
-    int n = 20;
+void Field::createField(int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             auto spriteTmp = Sprite::create("dibilcell.png");
 
             this->addChild(spriteTmp);
             spriteTmp->setAnchorPoint(Vec2(0, 0));
-            spriteTmp->setPosition(Vec2(j * 30, i*30));
-            spriteTmp->setScale(30 / spriteTmp->getContentSize().width);
+            spriteTmp->setPosition(Vec2(j * tileSize, i * tileSize));
+            spriteTmp->setScale(tileSize / spriteTmp->getContentSize().width);
             //spriteTmp->setAnchorPoint(Vec2(0,0));
 
 
@@ -39,8 +37,22 @@ void Field::onEnter() {
     Node::onEnter();
 }
 
-void Field::moveBy(Vec2 vec) {
-    runAction(MoveTo::create(2, vec));
+void Field::moveBy(Vec2 vec, float secs) {
+    runAction(MoveBy::create(secs, vec));
+
+}
+
+void Field::update(float dt) {
+    Node::update(dt);
+
+
+}
+
+void Field::scaleBy(float duration, float scaleFactor) {
+    if (currentScale * scaleFactor < MAX_SCALE && currentScale * scaleFactor > MIN_SCALE) {
+        runAction(ScaleBy::create(duration, scaleFactor));
+        currentScale *= scaleFactor;
+    }
 }
 
 

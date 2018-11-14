@@ -55,40 +55,87 @@ bool MainScene::init() {
 
 
     field = Field::create();
-    field->setAnchorPoint(Vec2(0, 0));
+    field->createField(30);
+    field->setAnchorPoint(Vec2(0.5, 0.5));
 
 
     Scene::addChild(field);
 
 
-    //field->moveBy(Vec2(100,100));
+    auto eventListener = EventListenerKeyboard::create();
+    eventListener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event *event) {
+        // If a key already exists, do nothing as it will already have a time stamp
+        // Otherwise, set's the timestamp to now
+        if (keys.find(keyCode) == keys.end()) {
+            keys[keyCode] = std::chrono::high_resolution_clock::now();
+        }
+    };
 
-    auto listener = EventListenerKeyboard::create();
-    listener->onKeyPressed = CC_CALLBACK_2(MainScene::onWASD, this);
 
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+    Director::getInstance()->getOpenGLView()->setIMEKeyboardState(true);
+
+    eventListener->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event *event) {
+        // remove the key.  std::map.erase() doesn't care if the key doesnt exist
+        keys.erase(keyCode);
+    };
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
 
     this->scheduleUpdate();
 
     return true;
 }
 
-void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
+    float time = 0.2;
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
-            field->moveBy(Vec2(0, 20));
-            auto listener = EventListenerKeyboard::create();
-            listener->onKeyPressed = CC_CALLBACK_2(MainScene::onWASD, this);
-
-            _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+            field->moveBy(Vec2(0, 10), time);
             break;
+        case EventKeyboard::KeyCode::KEY_S:
+            field->moveBy(Vec2(0, -10), time);
+            break;
+        case EventKeyboard::KeyCode::KEY_A:
+            field->moveBy(Vec2(-10, 0), time);
+            break;
+        case EventKeyboard::KeyCode::KEY_D:
+            field->moveBy(Vec2(10, 0), time);
+            break;
+
+        case EventKeyboard::KeyCode::KEY_EQUAL:
+            field->scaleBy(time,1.1);
+            break;
+        case EventKeyboard::KeyCode::KEY_MINUS:
+            field->scaleBy(time,0.9);
+            break;
+
+        case EventKeyboard::KeyCode::KEY_ESCAPE:
+            Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+            exit(0);
+#endif
+            break;
+
     }
 
 
 }
 
 void MainScene::update(float dt) {
+    Node::update(dt);
+    for (auto key:keys) {
+        onWASD(key.first);
+    }
+}
 
+bool MainScene::isKeyPressed(cocos2d::EventKeyboard::KeyCode code) {
+    // Check if the key is currently pressed by seeing it it's in the std::map keys
+    // In retrospect, keys is a terrible name for a key/value paried datatype isnt it?
+    if (keys.find(code) != keys.end())
+        return true;
+    return false;
 }
 
 
@@ -100,5 +147,10 @@ exit(0);
 
 //EventCustom customEndEvent("game_scene_close_event");
 //_eventDispatcher->dispatchEvent(&customEndEvent);
+
+
+std::map<cocos2d::EventKeyboard::KeyCode,
+        std::chrono::high_resolution_clock::time_point> MainScene::keys;
+
 
 
