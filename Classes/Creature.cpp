@@ -43,7 +43,7 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
     if (creature && creature->initWithFile(path)) {
         creature->setX(_x);
         creature->setY(_y);
-        creature->setTielSize(_tileSize);
+        creature->setTileSize(_tileSize);
         creature->setN(_n);
         creature->setType(_type);
 
@@ -78,10 +78,11 @@ void Creature::manage() {
 }
 
 void Creature::deathAnimation() {
-    setAnchorPoint(Vec2(0.5, 0.5));
-    moveBy(Vec2(tileSize / 2, tileSize / 2), 0);
-    runAction(ScaleBy::create(5.0, 0.0));
-
+    //setAnchorPoint(Vec2(0.5, 0.5));
+    //moveBy(Vec2(tileSize / 2, tileSize / 2), 0);
+    //runAction(ScaleBy::create(5.0, 0.0));
+    setTexture("deadChar.png");
+    runAction(FadeOut::create(5.0f));
 }
 
 void Creature::setPicture(std::string path) {

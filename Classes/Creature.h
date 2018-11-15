@@ -32,9 +32,9 @@ public:
 
     void setType(const std::string &_type) { type = _type; }
 
-    void setTielSize(int _tileSize) { tileSize = _tileSize; }
+    void setTileSize(int _tileSize) { tileSize = _tileSize; }
 
-    void deathAnimation();
+    virtual void deathAnimation();
 
     void setPicture(std::string path);
 

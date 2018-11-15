@@ -3,6 +3,7 @@
 //
 
 #include "Field.h"
+#include "Tile.h"
 
 
 USING_NS_CC;
@@ -19,15 +20,24 @@ bool Field::init() {
 
 void Field::createField(int _n) {
     this->n = _n;
+
+    std::pair<std::string, std::string> pathes[] = {std::make_pair("grass", "grass.png"),
+                                                    std::make_pair("dirt", "dirt.png"),
+                                                    std::make_pair("water", "water.png")};
+    std::random_device rd;     // only used once to initialise (seed) engine
+    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+    std::uniform_int_distribution<int> uni(0, 2); // guaranteed unbiased
     for (int i = 0; i < _n; i++) {
         for (int j = 0; j < _n; j++) {
-            auto spriteTmp = Sprite::create("grass.png");
+            int tmp = uni(rd);
+            auto tileSprite = TileSprite::createTileSprite(i, j, tileSize, _n, pathes[tmp].first, pathes[tmp].second);
+            //auto spriteTmp = Sprite::create("grass.png");
 
-            this->addChild(spriteTmp);
-            spriteTmp->setZOrder(-10);
-            spriteTmp->setAnchorPoint(Vec2(0, 0));
-            spriteTmp->setPosition(Vec2(j * tileSize, i * tileSize));
-            spriteTmp->setScale(tileSize / spriteTmp->getContentSize().width);
+            this->addChild(tileSprite);
+            tileSprite->setZOrder(-10);
+            tileSprite->setAnchorPoint(Vec2(0, 0));
+            //tileSprite->setPosition(Vec2(j * tileSize, i * tileSize));
+            tileSprite->setScale(tileSize / tileSprite->getContentSize().width);
         }
     }
 }
@@ -69,9 +79,6 @@ void Field::addCreature(int x, int y, const std::string &type) {
 
 void Field::gameStep(float dt) {
     for (auto creature:creatures) {
-        creature->manage();
-    }
-    for (auto creature:creatures) {
         int x = creature->getX();
         int y = creature->getY();
 
@@ -83,7 +90,7 @@ void Field::gameStep(float dt) {
                                                    enemy->getType() != creature->getType()) {
                                                    //enemy->deathAnimation();
                                                    //enemy->removeFromParent();
-                                                   enemy->setTexture("deadChar.png");
+
                                                    enemy->deathAnimation();
                                                    enemy->setZOrder(-1);
                                                    return true;
@@ -100,6 +107,10 @@ void Field::gameStep(float dt) {
             ), creatures.end());
 
         }
+    }
+
+    for (auto creature:creatures) {
+        creature->manage();
     }
 
 }

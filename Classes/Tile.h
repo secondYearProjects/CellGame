@@ -13,6 +13,30 @@ public:
 
     virtual bool init();
 
+    int getX() const { return x; }
+
+    int getY() const { return y; }
+
+    int getTileSize() const { return tileSize; }
+
+    std::string getType() const { return type; }
+
+    std::string getPath() const { return path; }
+
+
+    void setX(int _x) { x = _x; }
+
+    void setY(int _y) { y = _y; }
+
+    void setN(int _n) { n = _n; }
+
+    void setTileSize(int _tileSize) { tileSize = _tileSize; }
+
+    void setType(const std::string &_type) { type = _type; }
+
+    void setPath(const std::string &_path) { path = _path; }
+
+
     static TileSprite *createTileSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
 
     virtual void onEnter();
@@ -21,9 +45,12 @@ public:
 
 private:
     TileSprite();
-    ~TileSprite();
-    int x, y, tileSize;
-    std::string type = "human";
+
+    ~TileSprite() {};
+
+    int x, y, tileSize, n;
+    std::string type = "grass";
+    std::string path = "grass.png";
 };
 
 
