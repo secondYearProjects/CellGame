@@ -37,7 +37,7 @@ void Creature::moveTo(cocos2d::Vec2 vec, float secs) {
 
 }
 
-Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string path) {
+Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
     auto creature = new Creature();
 
     if (creature && creature->initWithFile(path)) {
@@ -45,6 +45,7 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
         creature->setY(_y);
         creature->setTielSize(_tileSize);
         creature->setN(_n);
+        creature->setType(_type);
 
         creature->autorelease();
         creature->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
@@ -86,6 +87,8 @@ void Creature::deathAnimation() {
 void Creature::setPicture(std::string path) {
     setTexture("deadChar.png");
 }
+
+
 
 
 

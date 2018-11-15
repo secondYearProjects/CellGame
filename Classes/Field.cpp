@@ -46,14 +46,18 @@ void Field::update(float dt) {
 }
 
 void Field::scaleBy(float duration, float scaleFactor) {
-    if (currentScale * scaleFactor < MAX_SCALE && currentScale * scaleFactor > MIN_SCALE) {
-        runAction(ScaleBy::create(duration, scaleFactor));
-        currentScale *= scaleFactor;
-    }
+    //if (currentScale * scaleFactor < MAX_SCALE && currentScale * scaleFactor > MIN_SCALE) {
+    runAction(ScaleBy::create(duration, scaleFactor));
+    currentScale *= scaleFactor;
+    //}
 }
 
-void Field::addCreature(int x, int y) {
-    auto newCreature = Creature::createCreatureSprite(x, y, tileSize, n, "character.png");
+void Field::addCreature(int x, int y, const std::string &type) {
+
+    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
+
+    if (type == "lizzard")
+        newCreature->setTexture("lizzard.png");
 
     newCreature->setScale(tileSize / newCreature->getContentSize().width);
     newCreature->setAnchorPoint(Vec2(0, 0));
@@ -71,24 +75,34 @@ void Field::gameStep(float dt) {
         int x = creature->getX();
         int y = creature->getY();
 
-        // TODO: here
-        creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
-            if (enemy != creature && x == enemy->getX() && y == enemy->getY()){
-                //enemy->deathAnimation();
-                //enemy->removeFromParent();
-                enemy->setTexture("deadChar.png");
-                enemy->deathAnimation();
-                enemy->setZOrder(-1);
-                return true;
-            }
-            return false;
-        }), creatures.end());
+        for (auto enemy:creatures) {
 
+            // TODO: here
+            creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
+                                               if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
+                                                   enemy->getType() != creature->getType()) {
+                                                   //enemy->deathAnimation();
+                                                   //enemy->removeFromParent();
+                                                   enemy->setTexture("deadChar.png");
+                                                   enemy->deathAnimation();
+                                                   enemy->setZOrder(-1);
+                                                   return true;
+
+                                               }
+                                               if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
+                                                   enemy->getType() == creature->getType()) {
+                                                   log("breed");
+                                                   // addCreature(x + 1, y, enemy->getType());
+                                               }
+                                               return false;
+                                           }
+
+            ), creatures.end());
+
+        }
     }
+
 }
-
-
-
 
 std::vector<Creature *> Field::creatures;
 

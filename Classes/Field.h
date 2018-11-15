@@ -31,7 +31,7 @@ public:
 
     void createField(int n);
 
-    void addCreature(int x, int y);
+    void addCreature(int x, int y, const std::string &type);
 
 private:
     // Constructor private to make misuse of this class difficult.

@@ -14,7 +14,7 @@ public:
 
     virtual bool init();
 
-    static Creature *createCreatureSprite(int x, int y, int tileSize, int n, std::string path);
+    static Creature *createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
 
     virtual void onEnter();
 
@@ -30,6 +30,8 @@ public:
 
     void setN(int _n) { n = _n; }
 
+    void setType(const std::string &_type) { type = _type; }
+
     void setTielSize(int _tileSize) { tileSize = _tileSize; }
 
     void deathAnimation();
@@ -37,8 +39,13 @@ public:
     void setPicture(std::string path);
 
     int getX() const { return x; }
+
     int getY() const { return y; }
+
     int getN() const { return n; }
+
+    std::string getType() { return type; }
+
     int getTitleSize() const { return tileSize; }
 
 
@@ -54,6 +61,7 @@ private:
     int x, y;
     int tileSize;
     int n;
+    std::string type = "human";
     int health = 100;
 };
 
