@@ -1,0 +1,11 @@
+//
+// Created by sju on 17.11.18.
+//
+
+#ifndef TEMPLATECPP_TERRAINGENERATOR_H
+#define TEMPLATECPP_TERRAINGENERATOR_H
+
+#include "CImg.h"
+
+
+#endif //TEMPLATECPP_TERRAINGENERATOR_H

@@ -27,6 +27,10 @@
 
 #include "SimpleAudioEngine.h"
 
+
+
+
+
 USING_NS_CC;
 
 Scene *MainScene::createScene() {
@@ -58,7 +62,7 @@ bool MainScene::init() {
     std::uniform_int_distribution<int> uni(0, 30-1); // guaranteed unbiased
     std::uniform_int_distribution<int> booly(0, 1);
     field = Field::create();
-    field->createField(30);
+    field->createField(100);
     for(int i=0;i<200;i++)
     {
         if (booly(rd))
@@ -107,6 +111,7 @@ bool MainScene::init() {
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
 
 
+
     this->scheduleUpdate();
     this->schedule(schedule_selector(Field::gameStep), tickTime);
 
@@ -151,6 +156,7 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
 
 void MainScene::update(float dt) {
     Node::update(dt);
+
     for (auto key:keys) {
         onWASD(key.first);
     }
