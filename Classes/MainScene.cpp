@@ -27,7 +27,7 @@
 
 #include "SimpleAudioEngine.h"
 
-
+#include "terrainGenerator.h"
 
 
 
@@ -50,6 +50,9 @@ bool MainScene::init() {
     if (!Scene::init()) {
         return false;
     }
+    // Create field texture
+    createe();
+
 
     CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
 
