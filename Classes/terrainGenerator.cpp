@@ -6,25 +6,27 @@
 
 void terrainGenerator::Terrain::createTexture() {
 
-    cl::CImg<unsigned char> canvas(static_cast<const unsigned int>(n * tileSize),
-                                   static_cast<const unsigned int>(n * tileSize));
+    cl::CImg<unsigned char> canvas((n * tileSize), (n * tileSize), 1, 3, 0);
 
-    cl::CImg<unsigned char> grass("Resources/grass.png", tileSize, tileSize);
-    //grass = cl::CImg<unsigned char>::load_rgba("Resources/grass.png");
-    //grass.load_png("Resources/grass.png");
-    // grass = cl::CImg<unsigned char>("Resources/grass.jpg");
-    //grass.resize(tileSize, tileSize);
+    canvas.channels(0, 3);
+    cl::CImg<unsigned char> grass("Resources/grass.png");
+  
+
+    grass.channels(0, 3);
     // grass.display();
     // TODO: here
-    grass.display();
-    const unsigned char white[] = {255, 255, 255};
+    grass.resize(tileSize, tileSize);
+    //grass.display();
+    const unsigned char white[] = {255, 255, 255, 255};
+    //grass.draw_gaussian(0.2, 0.5, 0.6, 0.9, {100,100,100,100});
     canvas.draw_fill(0, 0, white);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             canvas.draw_image(i * tileSize, j * tileSize, grass);
+            //canvas.draw_image(grass);
         }
     }
-    canvas.display();
+    //canvas.display();
     canvas.save(texturePath);
     //canvas.display();
 }

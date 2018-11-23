@@ -22,8 +22,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef __MainScene_H__
+#define __MainScene_H__
 
 #include "cocos2d.h"
 #include "Field.h"
@@ -57,4 +57,4 @@ private:
 };
 
 
-#endif // __HELLOWORLD_SCENE_H__
+#endif // __MainScene_H__
