@@ -7,6 +7,7 @@
 
 #include "cocos2d.h"
 #include "Creature.h"
+#include "terrainGenerator.h"
 
 #include <vector>
 
@@ -36,11 +37,12 @@ public:
 private:
     // Constructor private to make misuse of this class difficult.
     Field();    // Constructor declared but defined in the cpp file.
-    ~Field() {}  // Destructor declared and defined here.
+    ~Field() { delete terrain; }  // Destructor declared and defined here.
 
     int tileSize = 60;
     int n;
     float currentScale = 1.0;
+    terrainGenerator::Terrain *terrain;
     static std::vector<Creature *> creatures;
 
 };

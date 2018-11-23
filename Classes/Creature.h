@@ -63,6 +63,7 @@ private:
     int n;
     std::string type = "human";
     int health = 100;
+    int power = 1;
 };
 
 

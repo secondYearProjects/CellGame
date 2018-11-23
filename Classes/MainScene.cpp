@@ -30,7 +30,6 @@
 #include "terrainGenerator.h"
 
 
-
 USING_NS_CC;
 
 Scene *MainScene::createScene() {
@@ -50,8 +49,6 @@ bool MainScene::init() {
     if (!Scene::init()) {
         return false;
     }
-    // Create field texture
-    createe();
 
 
     CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
@@ -62,19 +59,16 @@ bool MainScene::init() {
 
     std::random_device rd;     // only used once to initialise (seed) engine
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(0, 30-1); // guaranteed unbiased
+    std::uniform_int_distribution<int> uni(0, 30 - 1); // guaranteed unbiased
     std::uniform_int_distribution<int> booly(0, 1);
     field = Field::create();
-    field->createField(100);
-    for(int i=0;i<200;i++)
-    {
+    field->createField(20);
+    for (int i = 0; i < 20; i++) {
         if (booly(rd))
-            field->addCreature(uni(rng), uni(rng),"lizzard");
+            field->addCreature(uni(rng), uni(rng), "lizzard");
         else
-            field->addCreature(uni(rng), uni(rng),"human");
+            field->addCreature(uni(rng), uni(rng), "human");
     }
-
-
 
 
     field->setAnchorPoint(Vec2(0.5, 0.5));
@@ -114,7 +108,6 @@ bool MainScene::init() {
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
 
 
-
     this->scheduleUpdate();
     this->schedule(schedule_selector(Field::gameStep), tickTime);
 
@@ -138,10 +131,10 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
             break;
 
         case EventKeyboard::KeyCode::KEY_EQUAL:
-            field->scaleBy(time, 1.1);
+            field->scaleBy(time, 1.4);
             break;
         case EventKeyboard::KeyCode::KEY_MINUS:
-            field->scaleBy(time, 0.9);
+            field->scaleBy(time, 0.6);
             break;
 
         case EventKeyboard::KeyCode::KEY_ESCAPE:

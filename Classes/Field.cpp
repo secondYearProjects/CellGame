@@ -20,7 +20,7 @@ bool Field::init() {
 
 void Field::createField(int _n) {
     this->n = _n;
-
+    /*
     std::pair<std::string, std::string> pathes[] = {std::make_pair("grass", "grass.png"),
                                                     std::make_pair("dirt", "dirt.png"),
                                                     std::make_pair("water", "water.png")};
@@ -40,6 +40,15 @@ void Field::createField(int _n) {
             tileSprite->setScale(tileSize / tileSprite->getContentSize().width);
         }
     }
+     */
+
+    terrain = new terrainGenerator::Terrain(n, 1337, 30);
+    auto terrainImage = Sprite::create(terrain->getTextureName());
+    terrainImage->setAnchorPoint(Vec2(0, 0));
+    terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
+    terrainImage->setZOrder(-10);
+    this->addChild(terrainImage);
+
 }
 
 void Field::onEnter() {
@@ -98,7 +107,7 @@ void Field::gameStep(float dt) {
                                                }
                                                if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
                                                    enemy->getType() == creature->getType()) {
-                                                   log("breed");
+                                                   //log("breed");
                                                    // addCreature(x + 1, y, enemy->getType());
                                                }
                                                return false;

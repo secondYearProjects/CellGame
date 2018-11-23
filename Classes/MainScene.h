@@ -30,12 +30,12 @@
 
 #include <map>
 
-class MainScene : public cocos2d::Scene
-{
+class MainScene : public cocos2d::Scene {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene *createScene();
 
     virtual bool init();
+
     virtual void update(float dt) override;
 
 
@@ -43,8 +43,6 @@ public:
 
     // implement the "static create()" method manually
     CREATE_FUNC(MainScene);
-
-
 
 
 private:
@@ -57,7 +55,6 @@ private:
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode code);
 
 };
-
 
 
 #endif // __HELLOWORLD_SCENE_H__

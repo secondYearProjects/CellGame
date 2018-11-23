@@ -48,6 +48,8 @@ if(APPLE OR WINDOWS)
     cocos_mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
 endif()
 
+
+
 include_directories(
         Classes
         ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
