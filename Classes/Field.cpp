@@ -41,7 +41,7 @@ void Field::createField(int _n) {
     }
      */
 
-    terrain = new terrainGenerator::Terrain(n, 1337, 30);
+    terrain = new terrainGenerator::Terrain(n, 1337, tileSize);
     auto terrainImage = Sprite::create(terrain->getTextureName());
     terrainImage->setAnchorPoint(Vec2(0, 0));
     terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
@@ -82,7 +82,7 @@ void Field::addCreature(int x, int y, const std::string &type) {
 
     addChild(newCreature);
     creatures.push_back(newCreature);
-
+    terrain->addCreature(x,y,newCreature);
 }
 
 void Field::gameStep(float dt) {
@@ -90,14 +90,12 @@ void Field::gameStep(float dt) {
         int x = creature->getX();
         int y = creature->getY();
 
-        for (auto &enemy:creatures) {
+        for (auto enemy:creatures) {
 
             // TODO: here
             creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
                                                if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
                                                    enemy->getType() != creature->getType()) {
-                                                   //enemy->deathAnimation();
-                                                   //enemy->removeFromParent();
 
                                                    enemy->deathAnimation();
                                                    enemy->setZOrder(-1);

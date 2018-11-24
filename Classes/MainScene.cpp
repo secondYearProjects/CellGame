@@ -59,11 +59,11 @@ bool MainScene::init() {
 
     std::random_device rd;     // only used once to initialise (seed) engine
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(0, 30 - 1); // guaranteed unbiased
+    std::uniform_int_distribution<int> uni(0, 10); // guaranteed unbiased
     std::uniform_int_distribution<int> booly(0, 1);
     field = Field::create();
-    field->createField(20);
-    for (int i = 0; i < 20; i++) {
+    field->createField(10);
+    for (int i = 0; i < 1; i++) {
         if (booly(rd))
             field->addCreature(uni(rng), uni(rng), "lizzard");
         else

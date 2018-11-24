@@ -57,14 +57,17 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
     return nullptr;
 }
 
-void Creature::walk(int _x, int _y, terrainGenerator::Terrain &terrain) {
-    if (x + _x < 0 || y + _y < 0)
-        return;
-    else if (x + _x > n - 1 || y + _y > n - 1)
-        return;
-    else if (terrain.getTile(x + _x, y + _y).type == terrainGenerator::water)
+void Creature::walk(int _x, int _y) {
+    int newX = x + _x;
+    int newY = y + _y;
+    if (!stepAvailable(_x, _y))
         return;
 
+    field->removeCreature(x, y, this);
+    field->addCreature(newX, newY, this);
+
+    log("current tile %i", field->getTile(x, y).type);
+    log("%i %i", x, y);
     runAction(MoveBy::create(0.2, Vec2(_x * tileSize, _y * tileSize)));
     x += _x;
     y += _y;
@@ -77,7 +80,7 @@ void Creature::manage() {
 
     int _x = uni(rng);
     int _y = uni(rng);
-    walk(_x, _y, *field);
+    walk(_x, _y);
 
 }
 
@@ -116,6 +119,24 @@ int Creature::getTitleSize() const { return tileSize; }
 
 void Creature::setParrentTerrain(terrainGenerator::Terrain &_field) {
     field = &_field;
+}
+
+bool Creature::stepAvailable(int _x, int _y) {
+    int newX = x + _x;
+    int newY = y + _y;
+    if (newX < 0 || newY < 0) {
+        log("border");
+        return false;
+    }
+    if (newX > n - 1 || newY > n - 1) {
+        log("border");
+        return false;
+    }
+    if (field->getTile(newX, newY).type == terrainGenerator::TileType::water) {
+        log("into water");
+        return false;
+    }
+    return true;
 }
 
 

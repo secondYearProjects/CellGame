@@ -17,7 +17,10 @@
 
 #define cimg_use_png
 
+class Creature;
 namespace terrainGenerator {
+
+
     namespace cl = cimg_library;
 
     enum TileType {
@@ -31,17 +34,18 @@ namespace terrainGenerator {
         Tile(size_t _x, size_t _y, int _height, TileType _type) :
                 x(_x), y(_y), height(_height), type(_type) {}
 
+        void addCreature(Creature *creature);
 
+        void removeCreature(Creature *creature);
 
         std::size_t x, y;
         int height;
 
         TileType type;
+
+        std::vector<Creature *> creatures;
     };
 
-    class TileSprite : public Tile {
-
-    };
 
     class Terrain {
     public:
@@ -52,6 +56,10 @@ namespace terrainGenerator {
         ~Terrain() = default;
 
         const Tile &getTile(std::size_t x, std::size_t y) const;
+
+        void addCreature(int _x, int _y, Creature *creature);
+
+        void removeCreature(int _x, int _y, Creature *creature);
 
         std::string getTexturePath() const;
 

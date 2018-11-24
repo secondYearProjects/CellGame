@@ -21,25 +21,33 @@ void terrainGenerator::Terrain::createTexture() {
             loadTile(getTexturePath(TileType::sand), tileSize * 2, tileSize * 2)
     };
 
+
+
     //cl::CImg<unsigned char> grass = loadTile("Resources/Tiles/grass.png", tileSize * 2, tileSize * 2);
 
     canvas.draw_fill(0, 0, white);
+
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             int typeID = tileRange(rng);
+            if (typeID == TileType::water)
+                cocos2d::log("water");
 
-
-            terrainMap[i][j] = Tile(i, j, 0, TileType(typeID));
+            terrainMap[i][n - j - 1] = Tile(i, j, 0, TileType(typeID));
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[TileType(typeID)]);
         }
     }
+
+
+    //canvas.draw_image(0, 100, tiles[TileType(3)]);
+
 
     canvas.save(texturePath);
 }
 
 terrainGenerator::Terrain::Terrain(std::size_t _n, int _seed, size_t _tileSize) :
         n(_n), seed(_seed), tileSize(_tileSize) {
-    terrainMap = std::vector< std::vector<Tile> >(_n,std::vector<Tile>(_n));
+    terrainMap = std::vector<std::vector<Tile> >(_n, std::vector<Tile>(_n));
 
     createTexture();
 }
@@ -91,4 +99,20 @@ const char *const terrainGenerator::Terrain::getTexturePath(terrainGenerator::Ti
             return "Resources/Tiles/sand.png";
     }
     return "Resourсes/Tiles/imageError.png";
+}
+
+void terrainGenerator::Terrain::addCreature(int _x, int _y, Creature *creature) {
+    terrainMap[_x][_y].addCreature(creature);
+}
+
+void terrainGenerator::Terrain::removeCreature(int _x, int _y, Creature *creature) {
+    terrainMap[_x][_y].removeCreature(creature);
+}
+
+void terrainGenerator::Tile::addCreature(Creature *creature) {
+    creatures.push_back(creature);
+}
+
+void terrainGenerator::Tile::removeCreature(Creature *creature) {
+    creatures.erase(std::find(creatures.begin(), creatures.end(), creature));
 }

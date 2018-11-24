@@ -60,12 +60,14 @@ public:
 
     virtual void manage();
 
-    void walk(int _x, int _y, terrainGenerator::Terrain &terrain);
+    void walk(int _x, int _y);
 
 private:
 // Constructor private to make misuse of this class difficult.
     Creature();    // Constructor declared but defined in the cpp file.
     ~Creature() {}  // Destructor declared and defined here.
+
+    bool stepAvailable(int _x, int _y);
 
     int x, y;
     int tileSize;
