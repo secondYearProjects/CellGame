@@ -47,7 +47,7 @@ public:
 
 private:
     Field *field;
-    float tickTime = 0.3f;
+    static float tickTime;
 
     static std::map<cocos2d::EventKeyboard::KeyCode,
             std::chrono::high_resolution_clock::time_point> keys;
@@ -55,6 +55,7 @@ private:
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode code);
 
 };
+
 
 
 #endif // __MainScene_H__

@@ -63,12 +63,13 @@ void Creature::walk(int _x, int _y) {
     if (!stepAvailable(_x, _y))
         return;
 
+
     field->removeCreature(x, y, this);
     field->addCreature(newX, newY, this);
 
-    log("current tile %i", field->getTile(x, y).type);
-    log("%i %i", x, y);
-    runAction(MoveBy::create(0.2, Vec2(_x * tileSize, _y * tileSize)));
+    //log("current tile %i", field->getTile(x, y).type);
+    //log("%i %i", x, y);
+    runAction(MoveBy::create(animationSpeed, Vec2(_x * tileSize, _y * tileSize)));
     x += _x;
     y += _y;
 }
@@ -89,7 +90,9 @@ void Creature::deathAnimation() {
     //moveBy(Vec2(tileSize / 2, tileSize / 2), 0);
     //runAction(ScaleBy::create(5.0, 0.0));
     setTexture("deadChar.png");
-    runAction(FadeOut::create(5.0f));
+
+    runAction(FadeOut::create(animationSpeed * 10.0));
+    field->removeCreature(x, y, this);
 }
 
 void Creature::setPicture(std::string path) {
@@ -125,19 +128,91 @@ bool Creature::stepAvailable(int _x, int _y) {
     int newX = x + _x;
     int newY = y + _y;
     if (newX < 0 || newY < 0) {
-        log("border");
+        //log("border");
         return false;
     }
     if (newX > n - 1 || newY > n - 1) {
-        log("border");
+        //log("border");
         return false;
     }
     if (field->getTile(newX, newY).type == terrainGenerator::TileType::water) {
-        log("into water");
+        //log("into water");
         return false;
     }
     return true;
 }
+
+int Creature::getHealth() const { return health; }
+
+void Creature::changeHealthBy(int value) {
+    health = (value + health);
+    if (health > maxHealth)
+        health = maxHealth;
+
+    auto tintTo = TintTo::create(0.1f, 255, 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
+                                 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)));
+    this->runAction(tintTo);
+}
+
+CreatureActions Creature::step() {
+    CreatureActions actions;
+    actions.breed = false;
+    actions.fight = false;
+    actions.fightDamage = 0;
+
+    if (hungrySteps > stepsToHunger)
+        changeHealthBy((hungrySteps - stepsToHunger) * stepHealthChange);
+    else {
+        changeHealthBy(stepHeal);
+        if (isPregnant)
+            breedingSteps++;
+    }
+
+
+    // Pregnant check
+    if (breedingSteps > stepsToBreed) {
+        actions.breed = true;
+        breedingSteps = 0;
+        isPregnant = false;
+    }
+
+    // Fight & Breed
+    if (!field->getTile(x, y).creatures.empty()) {
+        for (int i = 0; i < field->getTile(x, y).creatures.size(); i++) {
+            auto &enemy = field->getTile(x, y).creatures[i];
+
+            if (enemy->getType() != this->getType()) {
+                actions.fight = true;
+                actions.fightDamage += enemy->getPower();
+                log("fight");
+            } else if (enemy->getType() == this->getType() && enemy != this) {
+                isPregnant = true;
+                log("preg");
+            }
+        }
+    }
+
+    // Food check
+    if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
+        changeHealthBy(grassHeal);
+        hungrySteps = 0;
+    } else {
+        hungrySteps++;
+    }
+
+    // Custom manage function
+    manage();
+
+    return actions;
+}
+
+float Creature::animationSpeed = 0.1f;
+
+void Creature::makePregnant() {
+    isPregnant = true;
+}
+
+int Creature::getPower() const { return power; }
 
 
 

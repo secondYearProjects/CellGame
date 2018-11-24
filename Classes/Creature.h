@@ -13,6 +13,12 @@
 
 class Field;
 
+struct CreatureActions {
+    bool breed = false;
+    bool fight = false;
+    int fightDamage = 0;
+};
+
 class Creature : public cocos2d::Sprite {
 public:
     CREATE_FUNC(Creature);
@@ -43,6 +49,10 @@ public:
 
     void setTileSize(int _tileSize);
 
+    void makePregnant();
+
+    void changeHealthBy(int value);
+
     virtual void deathAnimation();
 
     void setPicture(std::string path);
@@ -53,14 +63,21 @@ public:
 
     int getN() const;
 
+    int getHealth() const;
+
+    int getPower() const;
+
     std::string getType();
 
     int getTitleSize() const;
 
+    CreatureActions step();
 
     virtual void manage();
 
     void walk(int _x, int _y);
+
+    static void setAnimationSpeed(float speed) { Creature::animationSpeed = speed; }
 
 private:
 // Constructor private to make misuse of this class difficult.
@@ -74,7 +91,20 @@ private:
     int n;
     std::string type = "human";
     int health = 100;
+    int maxHealth = 100;
     int power = 1;
+    int hungrySteps = 0;
+    int breedingSteps = 0;
+    bool isPregnant = false;
+
+    static int const stepHealthChange = -5;
+    static int const grassHeal = 5;
+    static int const stepHeal = 2;
+
+    static int const stepsToBreed = 10;
+    static int const stepsToHunger = 5;
+
+    static float animationSpeed;
     terrainGenerator::Terrain *field = nullptr;
 };
 

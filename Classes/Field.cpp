@@ -82,41 +82,69 @@ void Field::addCreature(int x, int y, const std::string &type) {
 
     addChild(newCreature);
     creatures.push_back(newCreature);
-    terrain->addCreature(x,y,newCreature);
+    terrain->addCreature(x, y, newCreature);
+}
+
+Creature *Field::bornCreature(int x, int y, const std::string &type) {
+    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png", *terrain);
+    if (type == "lizzard")
+        newCreature->setTexture("lizzard.png");
+
+    newCreature->setScale(tileSize / newCreature->getContentSize().width);
+    newCreature->setAnchorPoint(Vec2(0, 0));
+
+    addChild(newCreature);
+
+    return newCreature;
 }
 
 void Field::gameStep(float dt) {
-    for (auto creature:creatures) {
-        int x = creature->getX();
-        int y = creature->getY();
+    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Creature *creature) {
+        //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
+        if (creature->getHealth() < 0) {
+            creature->deathAnimation();
+            return true;
+        }
+        return false;
+    }), creatures.end());
 
-        for (auto enemy:creatures) {
+    std::vector<Creature *> newBorn;
 
-            // TODO: here
-            creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
-                                               if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
-                                                   enemy->getType() != creature->getType()) {
+    for (int i = 0; i < creatures.size(); i++) {
+        auto &creature = creatures[i];
 
-                                                   enemy->deathAnimation();
-                                                   enemy->setZOrder(-1);
-                                                   return true;
+        CreatureActions action = creature->step();
+        if (action.breed) {
+            log("breed %s", creature->getType().c_str());
+            newBorn.push_back(bornCreature(creature->getX(), creature->getY(), creature->getType()));
 
-                                               }
-                                               return false;
-                                           }
-
-            ), creatures.end());
-
+        }
+        if (action.fight) {
+            creature->changeHealthBy(-action.fightDamage);
         }
     }
 
-    for (auto creature:creatures) {
-        creature->manage();
-    }
+    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Creature *creature) {
+        //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
+        if (creature->getHealth() < 0) {
+            creature->deathAnimation();
+            return true;
+        }
+        return false;
+    }), creatures.end());
 
+    for (int i = 0; i < newBorn.size(); i++) {
+
+        creatures.push_back(newBorn[i]);
+        terrain->terrainMap[newBorn[i]->getX()][newBorn[i]->getY()].creatures.push_back(newBorn[i]);
+        //terrain->breedCreature(newBorn[i]->getX(), newBorn[i]->getY(), newBorn[i]);
+
+    }
 }
 
+
 terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
+
 
 std::vector<Creature *> Field::creatures;
 

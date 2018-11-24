@@ -59,12 +59,16 @@ namespace terrainGenerator {
 
         void addCreature(int _x, int _y, Creature *creature);
 
+        void breedCreature(int _x, int _y, Creature *creature);
+
         void removeCreature(int _x, int _y, Creature *creature);
 
         std::string getTexturePath() const;
 
         std::string getTextureName() const;
 
+
+        std::vector<std::vector<Tile> > terrainMap;
     private:
         // Constant colors
         const unsigned char white[3] = {255, 255, 255};
@@ -77,7 +81,7 @@ namespace terrainGenerator {
         std::size_t tileSize;
         std::size_t n;
         const char *const texturePath = "Resources/fieldTexture.png";
-        std::vector<std::vector<Tile> > terrainMap;
+        //std::vector<std::vector<Tile> > terrainMap;
 
         void createTexture();
 

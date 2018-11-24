@@ -37,12 +37,14 @@ public:
 
     void addCreature(int x, int y, const std::string &type);
 
+    Creature *bornCreature(int x, int y, const std::string &type);
+
 private:
     // Constructor private to make misuse of this class difficult.
     Field();    // Constructor declared but defined in the cpp file.
     ~Field() { delete terrain; }  // Destructor declared and defined here.
 
-    int tileSize = 60;
+    int tileSize = 30;
     int n;
     float currentScale = 1.0;
     terrainGenerator::Terrain *terrain;

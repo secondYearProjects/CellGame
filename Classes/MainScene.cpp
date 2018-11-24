@@ -50,6 +50,8 @@ bool MainScene::init() {
         return false;
     }
 
+    Creature::setAnimationSpeed(tickTime*0.3f);
+
 
     CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
 
@@ -62,8 +64,8 @@ bool MainScene::init() {
     std::uniform_int_distribution<int> uni(0, 10); // guaranteed unbiased
     std::uniform_int_distribution<int> booly(0, 1);
     field = Field::create();
-    field->createField(10);
-    for (int i = 0; i < 1; i++) {
+    field->createField(20);
+    for (int i = 0; i < 10; i++) {
         if (booly(rd))
             field->addCreature(uni(rng), uni(rng), "lizzard");
         else
@@ -179,6 +181,8 @@ exit(0);
 
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> MainScene::keys;
+
+float MainScene::tickTime = 0.3f;
 
 
 
