@@ -37,8 +37,7 @@ void Creature::moveTo(cocos2d::Vec2 vec, float secs) {
 
 }
 
-Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path,
-                                         terrainGenerator::Terrain &_field) {
+Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
     auto creature = new Creature();
 
     if (creature && creature->initWithFile(path)) {
@@ -47,7 +46,6 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
         creature->setTileSize(_tileSize);
         creature->setN(_n);
         creature->setType(_type);
-        creature->setParrentTerrain(_field);
 
         creature->autorelease();
         creature->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
@@ -120,9 +118,6 @@ std::string Creature::getType() { return type; }
 
 int Creature::getTitleSize() const { return tileSize; }
 
-void Creature::setParrentTerrain(terrainGenerator::Terrain &_field) {
-    field = &_field;
-}
 
 bool Creature::stepAvailable(int _x, int _y) {
     int newX = x + _x;
@@ -186,8 +181,10 @@ CreatureActions Creature::step() {
                 actions.fightDamage += enemy->getPower();
                 log("fight");
             } else if (enemy->getType() == this->getType() && enemy != this) {
-                isPregnant = true;
-                log("preg");
+                if (!isPregnant) {
+                    isPregnant = true;
+                    log("preg");
+                }
             }
         }
     }
@@ -214,6 +211,11 @@ void Creature::makePregnant() {
 
 int Creature::getPower() const { return power; }
 
+terrainGenerator::Terrain *Creature::field = nullptr;
+
+void Creature::breed() {
+
+}
 
 
 

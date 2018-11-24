@@ -48,6 +48,8 @@ void Field::createField(int _n) {
     terrainImage->setZOrder(-10);
     this->addChild(terrainImage);
 
+    Creature::setParrentTerrain(terrain);
+
 }
 
 void Field::onEnter() {
@@ -72,21 +74,13 @@ void Field::scaleBy(float duration, float scaleFactor) {
 
 void Field::addCreature(int x, int y, const std::string &type) {
 
-    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png", *terrain);
-
-    if (type == "lizzard")
-        newCreature->setTexture("lizzard.png");
-
-    newCreature->setScale(tileSize / newCreature->getContentSize().width);
-    newCreature->setAnchorPoint(Vec2(0, 0));
-
-    addChild(newCreature);
+    auto newCreature = bornCreature(x, y, type);
     creatures.push_back(newCreature);
     terrain->addCreature(x, y, newCreature);
 }
 
 Creature *Field::bornCreature(int x, int y, const std::string &type) {
-    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png", *terrain);
+    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
     if (type == "lizzard")
         newCreature->setTexture("lizzard.png");
 
@@ -136,9 +130,8 @@ void Field::gameStep(float dt) {
     for (int i = 0; i < newBorn.size(); i++) {
 
         creatures.push_back(newBorn[i]);
-        terrain->terrainMap[newBorn[i]->getX()][newBorn[i]->getY()].creatures.push_back(newBorn[i]);
-        //terrain->breedCreature(newBorn[i]->getX(), newBorn[i]->getY(), newBorn[i]);
-
+        Creature::getParrentTerrain()->changeTile(newBorn[i]->getX(), newBorn[i]->getY()).creatures.push_back(
+                newBorn[i]);
     }
 }
 

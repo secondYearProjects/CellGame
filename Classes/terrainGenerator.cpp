@@ -111,8 +111,8 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Creature *creatur
 }
 
 void terrainGenerator::Terrain::breedCreature(int _x, int _y, Creature *creature) {
-    auto &tile  = terrainMap[_x][_y];
-    tile.creatures.push_back(creature);
+    //auto &tile  = Creature::getParrentTerrain()[_x][_y];
+    //tile.creatures.push_back(creature);
 }
 
 void terrainGenerator::Tile::addCreature(Creature *creature) {

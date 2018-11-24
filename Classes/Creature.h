@@ -26,8 +26,7 @@ public:
     virtual bool init();
 
     static Creature *
-    createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path,
-                         terrainGenerator::Terrain &_field);
+    createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
 
     virtual void onEnter();
 
@@ -36,8 +35,6 @@ public:
     void moveBy(cocos2d::Vec2 vec, float secs);
 
     void moveTo(cocos2d::Vec2 vec, float secs);
-
-    void setParrentTerrain(terrainGenerator::Terrain &_field);
 
     void setX(int _x);
 
@@ -79,6 +76,12 @@ public:
 
     static void setAnimationSpeed(float speed) { Creature::animationSpeed = speed; }
 
+    static void setParrentTerrain(terrainGenerator::Terrain *_field) { Creature::field = _field; }
+
+    static terrainGenerator::Terrain * getParrentTerrain() { return Creature::field; }
+
+    void breed();
+
 private:
 // Constructor private to make misuse of this class difficult.
     Creature();    // Constructor declared but defined in the cpp file.
@@ -86,12 +89,14 @@ private:
 
     bool stepAvailable(int _x, int _y);
 
+
+
     int x, y;
     int tileSize;
     int n;
     std::string type = "human";
-    int health = 100;
-    int maxHealth = 100;
+    int health = 1000;
+    int maxHealth = 1000;
     int power = 1;
     int hungrySteps = 0;
     int breedingSteps = 0;
@@ -101,11 +106,11 @@ private:
     static int const grassHeal = 5;
     static int const stepHeal = 2;
 
-    static int const stepsToBreed = 10;
+    static int const stepsToBreed = 3;
     static int const stepsToHunger = 5;
 
     static float animationSpeed;
-    terrainGenerator::Terrain *field = nullptr;
+    static terrainGenerator::Terrain *field;
 };
 
 
