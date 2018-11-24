@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <random>
 
 #define cimg_use_png
 
@@ -20,7 +21,7 @@ namespace terrainGenerator {
     namespace cl = cimg_library;
 
     enum TileType {
-        grass = 0, dirt, water
+        grass = 0, dirt, water, sand
     };
 
     struct Tile {

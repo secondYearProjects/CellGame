@@ -6,24 +6,29 @@
 
 void terrainGenerator::Terrain::createTexture() {
 
-    cl::CImg<unsigned char> canvas((n * tileSize), (n * tileSize), 1, 3, 0);
-
+    cl::CImg<unsigned char> canvas((n * tileSize), (n * tileSize), 1, 4, 0);
     canvas.channels(0, 3);
-    cl::CImg<unsigned char> grass("Resources/grass.png");
-  
 
+    cl::CImg<unsigned char> grass("Resources/grass.png");
     grass.channels(0, 3);
-    // grass.display();
-    // TODO: here
     grass.resize(tileSize, tileSize);
-    //grass.display();
+
+    cl::CImg<unsigned char> water("Resources/water.png");
+    water.channels(0, 3);
+    water.resize(tileSize, tileSize);
+
+    cl::CImg<unsigned char> dirt("Resources/dirt.png");
+    dirt.channels(0, 3);
+    dirt.resize(tileSize, tileSize);
+
+
+
     const unsigned char white[] = {255, 255, 255, 255};
     //grass.draw_gaussian(0.2, 0.5, 0.6, 0.9, {100,100,100,100});
     canvas.draw_fill(0, 0, white);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             canvas.draw_image(i * tileSize, j * tileSize, grass);
-            //canvas.draw_image(grass);
         }
     }
     //canvas.display();
