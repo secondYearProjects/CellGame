@@ -2,3 +2,4 @@ bin/
 cmake-build-debug/
 linux-build
 .idea/
+cocos2d/
