@@ -2,11 +2,16 @@
 // Created by sju on 14.11.18.
 //
 
+
+
 #ifndef TEMPLATECPP_CREATURE_H
 #define TEMPLATECPP_CREATURE_H
 
 #include "cocos2d.h"
+#include "terrainGenerator.h"
 
+
+class Field;
 
 class Creature : public cocos2d::Sprite {
 public:
@@ -14,7 +19,9 @@ public:
 
     virtual bool init();
 
-    static Creature *createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
+    static Creature *
+    createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path,
+                         terrainGenerator::Terrain &_field);
 
     virtual void onEnter();
 
@@ -24,34 +31,36 @@ public:
 
     void moveTo(cocos2d::Vec2 vec, float secs);
 
-    void setX(int _x) { x = _x; }
+    void setParrentTerrain(terrainGenerator::Terrain &_field);
 
-    void setY(int _y) { y = _y; }
+    void setX(int _x);
 
-    void setN(int _n) { n = _n; }
+    void setY(int _y);
 
-    void setType(const std::string &_type) { type = _type; }
+    void setN(int _n);
 
-    void setTileSize(int _tileSize) { tileSize = _tileSize; }
+    void setType(const std::string &_type);
+
+    void setTileSize(int _tileSize);
 
     virtual void deathAnimation();
 
     void setPicture(std::string path);
 
-    int getX() const { return x; }
+    int getX() const;
 
-    int getY() const { return y; }
+    int getY() const;
 
-    int getN() const { return n; }
+    int getN() const;
 
-    std::string getType() { return type; }
+    std::string getType();
 
-    int getTitleSize() const { return tileSize; }
+    int getTitleSize() const;
 
 
     virtual void manage();
 
-    void walk(int _x, int _y);
+    void walk(int _x, int _y, terrainGenerator::Terrain &terrain);
 
 private:
 // Constructor private to make misuse of this class difficult.
@@ -64,6 +73,7 @@ private:
     std::string type = "human";
     int health = 100;
     int power = 1;
+    terrainGenerator::Terrain *field = nullptr;
 };
 
 

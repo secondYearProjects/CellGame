@@ -14,6 +14,7 @@
 #define MAX_SCALE 8.0
 #define MIN_SCALE 0.05
 
+
 class Field : public cocos2d::Node {
 public:
     CREATE_FUNC(Field);
@@ -23,6 +24,8 @@ public:
     virtual void onEnter();
 
     virtual void update(float dt) override;
+
+    terrainGenerator::Terrain &getTerrain();
 
     void moveBy(cocos2d::Vec2 vec, float secs);
 

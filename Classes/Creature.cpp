@@ -37,7 +37,8 @@ void Creature::moveTo(cocos2d::Vec2 vec, float secs) {
 
 }
 
-Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
+Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path,
+                                         terrainGenerator::Terrain &_field) {
     auto creature = new Creature();
 
     if (creature && creature->initWithFile(path)) {
@@ -46,6 +47,7 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
         creature->setTileSize(_tileSize);
         creature->setN(_n);
         creature->setType(_type);
+        creature->setParrentTerrain(_field);
 
         creature->autorelease();
         creature->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
@@ -55,10 +57,12 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
     return nullptr;
 }
 
-void Creature::walk(int _x, int _y) {
+void Creature::walk(int _x, int _y, terrainGenerator::Terrain &terrain) {
     if (x + _x < 0 || y + _y < 0)
         return;
-    if (x + _x > n - 1 || y + _y > n - 1)
+    else if (x + _x > n - 1 || y + _y > n - 1)
+        return;
+    else if (terrain.getTile(x + _x, y + _y).type == terrainGenerator::water)
         return;
 
     runAction(MoveBy::create(0.2, Vec2(_x * tileSize, _y * tileSize)));
@@ -73,7 +77,7 @@ void Creature::manage() {
 
     int _x = uni(rng);
     int _y = uni(rng);
-    walk(_x, _y);
+    walk(_x, _y, *field);
 
 }
 
@@ -87,6 +91,31 @@ void Creature::deathAnimation() {
 
 void Creature::setPicture(std::string path) {
     setTexture("deadChar.png");
+}
+
+
+void Creature::setX(int _x) { x = _x; }
+
+void Creature::setY(int _y) { y = _y; }
+
+void Creature::setN(int _n) { n = _n; }
+
+void Creature::setType(const std::string &_type) { type = _type; }
+
+void Creature::setTileSize(int _tileSize) { tileSize = _tileSize; }
+
+int Creature::getX() const { return x; }
+
+int Creature::getY() const { return y; }
+
+int Creature::getN() const { return n; }
+
+std::string Creature::getType() { return type; }
+
+int Creature::getTitleSize() const { return tileSize; }
+
+void Creature::setParrentTerrain(terrainGenerator::Terrain &_field) {
+    field = &_field;
 }
 
 

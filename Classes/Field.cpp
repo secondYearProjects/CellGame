@@ -3,7 +3,6 @@
 //
 
 #include "Field.h"
-#include "Tile.h"
 
 
 USING_NS_CC;
@@ -73,7 +72,7 @@ void Field::scaleBy(float duration, float scaleFactor) {
 
 void Field::addCreature(int x, int y, const std::string &type) {
 
-    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
+    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png", *terrain);
 
     if (type == "lizzard")
         newCreature->setTexture("lizzard.png");
@@ -91,7 +90,7 @@ void Field::gameStep(float dt) {
         int x = creature->getX();
         int y = creature->getY();
 
-        for (auto enemy:creatures) {
+        for (auto &enemy:creatures) {
 
             // TODO: here
             creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [creature, x, y](Creature *enemy) {
@@ -104,11 +103,6 @@ void Field::gameStep(float dt) {
                                                    enemy->setZOrder(-1);
                                                    return true;
 
-                                               }
-                                               if (enemy != creature && x == enemy->getX() && y == enemy->getY() &&
-                                                   enemy->getType() == creature->getType()) {
-                                                   //log("breed");
-                                                   // addCreature(x + 1, y, enemy->getType());
                                                }
                                                return false;
                                            }
@@ -123,6 +117,8 @@ void Field::gameStep(float dt) {
     }
 
 }
+
+terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
 
 std::vector<Creature *> Field::creatures;
 

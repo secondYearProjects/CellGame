@@ -100,9 +100,9 @@ bool MainScene::init() {
     mouseEvent->onMouseScroll = [=](Event *event) {
         EventMouse *e = (EventMouse *) event;
         if (e->getScrollY() > 0)
-            field->scaleBy(0.2, 1.3);
+            field->scaleBy(0.2, 0.6);
         else
-            field->scaleBy(0.2, 0.7);
+            field->scaleBy(0.2, 1.4);
     };
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
