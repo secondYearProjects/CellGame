@@ -64,6 +64,7 @@ void Creature::walk(int _x, int _y) {
 
     field->removeCreature(x, y, this);
     field->addCreature(newX, newY, this);
+    //Creature::getParrentTerrain()->changeTile(x, y).creatures.push_back(this);
 
     //log("current tile %i", field->getTile(x, y).type);
     //log("%i %i", x, y);

@@ -102,17 +102,17 @@ void Field::gameStep(float dt) {
         return false;
     }), creatures.end());
 
-    std::vector<Creature *> newBorn;
+    //std::vector<Creature *> newBorn;
 
     for (int i = 0; i < creatures.size(); i++) {
         auto &creature = creatures[i];
 
         CreatureActions action = creature->step();
-        if (action.breed) {
-            log("breed %s", creature->getType().c_str());
-            newBorn.push_back(bornCreature(creature->getX(), creature->getY(), creature->getType()));
-
-        }
+//        if (action.breed) {
+//            log("breed %s", creature->getType().c_str());
+//            newBorn.push_back(bornCreature(creature->getX(), creature->getY(), creature->getType()));
+//
+//        }
         if (action.fight) {
             creature->changeHealthBy(-action.fightDamage);
         }
@@ -127,12 +127,12 @@ void Field::gameStep(float dt) {
         return false;
     }), creatures.end());
 
-    for (int i = 0; i < newBorn.size(); i++) {
-
-        creatures.push_back(newBorn[i]);
-        Creature::getParrentTerrain()->changeTile(newBorn[i]->getX(), newBorn[i]->getY()).creatures.push_back(
-                newBorn[i]);
-    }
+//    for (int i = 0; i < newBorn.size(); i++) {
+//
+//        creatures.push_back(newBorn[i]);
+//        Creature::getParrentTerrain()->changeTile(newBorn[i]->getX(), newBorn[i]->getY()).creatures.push_back(
+//                newBorn[i]);
+//    }
 }
 
 

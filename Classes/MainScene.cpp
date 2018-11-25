@@ -182,7 +182,7 @@ exit(0);
 std::map<cocos2d::EventKeyboard::KeyCode,
         std::chrono::high_resolution_clock::time_point> MainScene::keys;
 
-float MainScene::tickTime = 0.5f;
+float MainScene::tickTime = 0.1f;
 
 
 
