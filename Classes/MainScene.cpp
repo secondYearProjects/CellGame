@@ -165,6 +165,8 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
             break;
         case EventKeyboard::KeyCode::KEY_ESCAPE:
             Director::getInstance()->end();
+        default:
+            break;
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
             exit(0);

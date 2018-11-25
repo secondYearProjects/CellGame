@@ -59,7 +59,7 @@ void Field::scaleBy(float duration, float scaleFactor) {
 void Field::addCreature(int x, int y, const std::string &type) {
 
     auto newCreature = Tribe::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
-    if (type == "lizzard")
+    if (type == "Obunga")
         newCreature->setTexture("lizzard.png");
 
     newCreature->setScale(tileSize / newCreature->getContentSize().width);
