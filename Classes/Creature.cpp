@@ -90,7 +90,7 @@ void Creature::deathAnimation() {
     //runAction(ScaleBy::create(5.0, 0.0));
     setTexture("deadChar.png");
 
-    runAction(FadeOut::create(animationSpeed * 10.0));
+    runAction(FadeOut::create(animationSpeed * 10.0f));
     field->removeCreature(x, y, this);
 }
 
@@ -145,7 +145,7 @@ void Creature::changeHealthBy(int value) {
     if (health > maxHealth)
         health = maxHealth;
 
-    auto tintTo = TintTo::create(0.1f, 255, 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
+    auto tintTo = TintTo::create(animationSpeed, 255, 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
                                  254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)));
     this->runAction(tintTo);
 }
@@ -212,11 +212,11 @@ void Creature::makePregnant() {
 
 int Creature::getPower() const { return power; }
 
-terrainGenerator::Terrain *Creature::field = nullptr;
-
 void Creature::breed() {
 
 }
+
+terrainGenerator::Terrain *Creature::field = nullptr;
 
 
 

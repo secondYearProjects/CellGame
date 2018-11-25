@@ -8,6 +8,7 @@ void terrainGenerator::Terrain::createTexture() {
 
     std::mt19937 rng(seed);
     std::uniform_int_distribution<int> tileRange(0, 3);
+    std::discrete_distribution<> d(probability.begin(), probability.end());
 
 
     cl::CImg<unsigned char> canvas((n * tileSize) * 2, (n * tileSize) * 2);
@@ -21,24 +22,16 @@ void terrainGenerator::Terrain::createTexture() {
             loadTile(getTexturePath(TileType::sand), tileSize * 2, tileSize * 2)
     };
 
-
-
-    //cl::CImg<unsigned char> grass = loadTile("Resources/Tiles/grass.png", tileSize * 2, tileSize * 2);
-
     canvas.draw_fill(0, 0, white);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            int typeID = tileRange(rng);
+            int typeID = d(rng);
 
             terrainMap[i][n - j - 1] = Tile(i, j, 0, TileType(typeID));
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[TileType(typeID)]);
         }
     }
-
-
-    //canvas.draw_image(0, 100, tiles[TileType(3)]);
-
 
     canvas.save(texturePath);
 }
@@ -100,20 +93,13 @@ const char *const terrainGenerator::Terrain::getTexturePath(terrainGenerator::Ti
 }
 
 void terrainGenerator::Terrain::addCreature(int _x, int _y, Creature *creature) {
-    auto &tile  = terrainMap[_x][_y];
-    tile.creatures.push_back(creature);
-
-    //terrainMap[_x][_y].addCreature(creature);
+    terrainMap[_x][_y].addCreature(creature);
 }
 
 void terrainGenerator::Terrain::removeCreature(int _x, int _y, Creature *creature) {
     terrainMap[_x][_y].removeCreature(creature);
 }
 
-void terrainGenerator::Terrain::breedCreature(int _x, int _y, Creature *creature) {
-    //auto &tile  = Creature::getParrentTerrain()[_x][_y];
-    //tile.creatures.push_back(creature);
-}
 
 void terrainGenerator::Tile::addCreature(Creature *creature) {
     creatures.push_back(creature);

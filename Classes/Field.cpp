@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by sju on 12.11.18.
 //
@@ -19,36 +21,18 @@ bool Field::init() {
 
 void Field::createField(int _n) {
     this->n = _n;
-    /*
-    std::pair<std::string, std::string> pathes[] = {std::make_pair("grass", "grass.png"),
-                                                    std::make_pair("dirt", "dirt.png"),
-                                                    std::make_pair("water", "water.png")};
-    std::random_device rd;     // only used once to initialise (seed) engine
-    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(0, 2); // guaranteed unbiased
-    for (int i = 0; i < _n; i++) {
-        for (int j = 0; j < _n; j++) {
-            int tmp = uni(rd);
-            auto tileSprite = TileSprite::createTileSprite(i, j, tileSize, _n, pathes[tmp].first, pathes[tmp].second);
-            //auto spriteTmp = Sprite::create("grass.png");
 
-            this->addChild(tileSprite);
-            tileSprite->setZOrder(-10);
-            tileSprite->setAnchorPoint(Vec2(0, 0));
-            //tileSprite->setPosition(Vec2(j * tileSize, i * tileSize));
-            tileSprite->setScale(tileSize / tileSprite->getContentSize().width);
-        }
-    }
-     */
+    terrainGenerator::Terrain *newTerrain = new terrainGenerator::Terrain(n, 1337, tileSize);
 
-    terrain = new terrainGenerator::Terrain(n, 1337, tileSize);
+    Field::setTerrain(newTerrain);
+    Creature::setParrentTerrain(newTerrain);
+
     auto terrainImage = Sprite::create(terrain->getTextureName());
     terrainImage->setAnchorPoint(Vec2(0, 0));
     terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
     terrainImage->setZOrder(-10);
     this->addChild(terrainImage);
 
-    Creature::setParrentTerrain(terrain);
 
 }
 
@@ -74,22 +58,18 @@ void Field::scaleBy(float duration, float scaleFactor) {
 
 void Field::addCreature(int x, int y, const std::string &type) {
 
-    auto newCreature = bornCreature(x, y, type);
-    creatures.push_back(newCreature);
-    terrain->addCreature(x, y, newCreature);
-}
-
-Creature *Field::bornCreature(int x, int y, const std::string &type) {
     auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
     if (type == "lizzard")
         newCreature->setTexture("lizzard.png");
 
     newCreature->setScale(tileSize / newCreature->getContentSize().width);
     newCreature->setAnchorPoint(Vec2(0, 0));
+    newCreature->setZOrder(1);
 
     addChild(newCreature);
 
-    return newCreature;
+    creatures.push_back(newCreature);
+    terrain->addCreature(x, y, newCreature);
 }
 
 void Field::gameStep(float dt) {
@@ -102,17 +82,20 @@ void Field::gameStep(float dt) {
         return false;
     }), creatures.end());
 
-    //std::vector<Creature *> newBorn;
+    struct BreedStruct {
+        BreedStruct(int _x, int _y, std::string _type) : x(_x), y(_y), type(std::move(_type)) {}
+
+        int x;
+        int y;
+        std::string type;
+    };
+
+    std::vector<BreedStruct> newBorn;
 
     for (int i = 0; i < creatures.size(); i++) {
         auto &creature = creatures[i];
 
         CreatureActions action = creature->step();
-//        if (action.breed) {
-//            log("breed %s", creature->getType().c_str());
-//            newBorn.push_back(bornCreature(creature->getX(), creature->getY(), creature->getType()));
-//
-//        }
         if (action.fight) {
             creature->changeHealthBy(-action.fightDamage);
         }
@@ -127,17 +110,14 @@ void Field::gameStep(float dt) {
         return false;
     }), creatures.end());
 
-//    for (int i = 0; i < newBorn.size(); i++) {
-//
-//        creatures.push_back(newBorn[i]);
-//        Creature::getParrentTerrain()->changeTile(newBorn[i]->getX(), newBorn[i]->getY()).creatures.push_back(
-//                newBorn[i]);
-//    }
 }
 
 
-terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
+//terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
 
 
 std::vector<Creature *> Field::creatures;
 
+terrainGenerator::Terrain *Field::terrain = nullptr;
+
+float Field::AnimationSpeed = 0.1f;

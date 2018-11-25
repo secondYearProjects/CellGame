@@ -46,7 +46,7 @@ public:
 
 
 private:
-    Field *field;
+    static Field *field;
     static float tickTime;
 
     static std::map<cocos2d::EventKeyboard::KeyCode,
@@ -54,8 +54,23 @@ private:
 
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode code);
 
-};
+    static void setTickTime(float val) {
+        tickTime = val;
+        Field::setAnimationSpeed(val * 0.5f);
+    }
 
+    static void setField(Field *_field) { field = _field; }
+
+    void updateTickSchedule()
+    {
+        this->unscheduleUpdate();
+        this->unschedule(schedule_selector(Field::gameStep));
+        this->scheduleUpdate();
+        this->schedule(schedule_selector(Field::gameStep), tickTime);
+
+    }
+
+};
 
 
 #endif // __MainScene_H__

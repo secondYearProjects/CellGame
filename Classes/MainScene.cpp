@@ -50,7 +50,7 @@ bool MainScene::init() {
         return false;
     }
 
-    Creature::setAnimationSpeed(tickTime*0.3f);
+    setTickTime(0.1f);
 
 
     CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
@@ -61,11 +61,11 @@ bool MainScene::init() {
 
     std::random_device rd;     // only used once to initialise (seed) engine
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(0, 10); // guaranteed unbiased
+    std::uniform_int_distribution<int> uni(0, 8); // guaranteed unbiased
     std::uniform_int_distribution<int> booly(0, 1);
-    field = Field::create();
-    field->createField(20);
-    for (int i = 0; i < 10; i++) {
+    setField(Field::create());
+    field->createField(100);
+    for (int i = 0; i < 80; i++) {
         if (booly(rd))
             field->addCreature(uni(rng), uni(rng), "lizzard");
         else
@@ -138,7 +138,22 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
         case EventKeyboard::KeyCode::KEY_MINUS:
             field->scaleBy(time, 0.6);
             break;
-
+        case EventKeyboard::KeyCode::KEY_SPACE:
+            setTickTime(1000.0f);
+            updateTickSchedule();
+            break;
+        case EventKeyboard::KeyCode::KEY_1:
+            setTickTime(1.0);
+            updateTickSchedule();
+            break;
+        case EventKeyboard::KeyCode::KEY_2:
+            setTickTime(0.5);
+            updateTickSchedule();
+            break;
+        case EventKeyboard::KeyCode::KEY_3:
+            setTickTime(0.1);
+            updateTickSchedule();
+            break;
         case EventKeyboard::KeyCode::KEY_ESCAPE:
             Director::getInstance()->end();
 
@@ -184,5 +199,5 @@ std::map<cocos2d::EventKeyboard::KeyCode,
 
 float MainScene::tickTime = 0.1f;
 
-
+Field * MainScene::field = nullptr;
 

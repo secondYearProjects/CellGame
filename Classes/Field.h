@@ -25,7 +25,7 @@ public:
 
     virtual void update(float dt) override;
 
-    terrainGenerator::Terrain &getTerrain();
+    //terrainGenerator::Terrain &getTerrain();
 
     void moveBy(cocos2d::Vec2 vec, float secs);
 
@@ -37,7 +37,10 @@ public:
 
     void addCreature(int x, int y, const std::string &type);
 
-    Creature *bornCreature(int x, int y, const std::string &type);
+    static void setAnimationSpeed(float val) {
+        AnimationSpeed = val;
+        Creature::setAnimationSpeed(val);
+    }
 
 private:
     // Constructor private to make misuse of this class difficult.
@@ -47,8 +50,12 @@ private:
     int tileSize = 30;
     int n;
     float currentScale = 1.0;
-    terrainGenerator::Terrain *terrain;
+    static terrainGenerator::Terrain *terrain;
     static std::vector<Creature *> creatures;
+
+    static float AnimationSpeed;
+
+    static void setTerrain(terrainGenerator::Terrain *_terrain) { Field::terrain = _terrain; }
 
 };
 

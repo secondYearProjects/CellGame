@@ -61,7 +61,6 @@ namespace terrainGenerator {
 
         void addCreature(int _x, int _y, Creature *creature);
 
-        void breedCreature(int _x, int _y, Creature *creature);
 
         void removeCreature(int _x, int _y, Creature *creature);
 
@@ -77,6 +76,8 @@ namespace terrainGenerator {
         const unsigned char red[3] = {255, 0, 0};
         const unsigned char green[3] = {0, 255, 0};
         const unsigned char blue[3] = {0, 0, 255};
+
+        std::vector<double> probability = {0.7, 0.3, 0.0, 0.0};
 
         int seed;
         std::size_t tileSize;

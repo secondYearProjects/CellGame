@@ -95,8 +95,9 @@ private:
     int tileSize;
     int n;
     std::string type = "human";
-    int health = 1000;
-    int maxHealth = 1000;
+    int health = 100;
+    int maxHealth = 100;
+
     int power = 1;
     int hungrySteps = 0;
     int breedingSteps = 0;
