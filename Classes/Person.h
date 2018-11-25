@@ -5,11 +5,13 @@
 #ifndef CELLGAME_PERSON_H
 #define CELLGAME_PERSON_H
 
+#include "random.h"
+
 #include <string>
-#include <random>
 #include <vector>
 #include <ctime>
 #include <cmath>
+
 
 class Tribe;
 
@@ -25,7 +27,7 @@ struct SPECIAL {
     static const int maxAttribute = 10;
 };
 
-bool success(float p);
+
 
 void increaseAttribute(SPECIAL &special, int attribute, int val);
 
@@ -45,6 +47,8 @@ public:
 
 
 private:
+    bool success(float p);
+
     int calculateAttack();
 
     void step();
@@ -62,13 +66,19 @@ private:
 
     SPECIAL attributes;
 
+    int age = 180;
+
     bool male = false;
     bool isPregnant = false;
+    int PregnantSteps = 0;
 
     static const int basicAttack = 1;
+    static const int basicRegen = 1;
     static const int pregnancyPerion = 10;
     static const int hungerPerAttack = 5;
     static const int hungerPerStep = 2;
+    static const int stepsBeforBreed = 20;
+
 
     static int MAX_ID;
 };

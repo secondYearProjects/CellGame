@@ -7,10 +7,40 @@
 #include <random>
 #include <ctime>
 
+#include <iostream>
+
 USING_NS_CC;
 
 
 Tribe::Tribe() {
+    people.reserve(startPeopleCount);
+    for (int i = 0; i < startPeopleCount; i++) {
+        people.emplace_back(Person(startSpecialPoints));
+    }
+
+    // to breed
+    bool hasFemale = false;
+    for (auto &person:people) {
+        if (!person.male) {
+            hasFemale = true;
+            break;
+        }
+    }
+    if (!hasFemale) {
+        people[0].male = false;
+    }
+
+    for (auto person:people) {
+        std::cout << person.name << ": "
+                  << person.attributes.Strength << " "
+                  << person.attributes.Perception << " "
+                  << person.attributes.Endurance << " "
+                  << person.attributes.Charisma << " "
+                  << person.attributes.Intelligence << " "
+                  << person.attributes.Agility << " "
+                  << person.attributes.Luck << "\n";
+    }
+    std::cout << std::endl;
 }
 
 bool Tribe::init() {
@@ -38,18 +68,18 @@ void Tribe::moveTo(cocos2d::Vec2 vec, float secs) {
 }
 
 Tribe *Tribe::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
-    auto creature = new Tribe();
+    auto tribe = new Tribe();
 
-    if (creature && creature->initWithFile(path)) {
-        creature->setX(_x);
-        creature->setY(_y);
-        creature->setTileSize(_tileSize);
-        creature->setN(_n);
-        creature->setType(_type);
+    if (tribe && tribe->initWithFile(path)) {
+        tribe->setX(_x);
+        tribe->setY(_y);
+        tribe->setTileSize(_tileSize);
+        tribe->setN(_n);
+        tribe->setType(_type);
 
-        creature->autorelease();
-        creature->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
-        return creature;
+        tribe->autorelease();
+        tribe->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
+        return tribe;
     }
 
     return nullptr;
@@ -133,7 +163,8 @@ void Tribe::changeHealthBy(int value) {
     if (health > maxHealth)
         health = maxHealth;
 
-    auto tintTo = TintTo::create(animationSpeed, 255, 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
+    auto tintTo = TintTo::create(animationSpeed, 255,
+                                 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
                                  254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)));
     this->runAction(tintTo);
 }
@@ -161,18 +192,18 @@ CreatureActions Tribe::step() {
     }
 
     // Fight & Breed
-    if (!field->getTile(x, y).creatures.empty()) {
-        for (int i = 0; i < field->getTile(x, y).creatures.size(); i++) {
-            auto &enemy = field->getTile(x, y).creatures[i];
+    if (!field->getTile(x, y).tribes.empty()) {
+        for (int i = 0; i < field->getTile(x, y).tribes.size(); i++) {
+            auto &enemy = field->getTile(x, y).tribes[i];
 
             if (enemy->getType() != this->getType()) {
                 actions.fight = true;
                 actions.fightDamage += enemy->getPower();
-                log("fight");
+                //log("fight");
             } else if (enemy->getType() == this->getType() && enemy != this) {
                 if (!isPregnant) {
                     isPregnant = true;
-                    log("preg");
+                    //log("preg");
                 }
             }
         }

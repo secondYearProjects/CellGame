@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <random>
+#include "random.h"
 
 #define cimg_use_png
 
@@ -34,16 +35,16 @@ namespace terrainGenerator {
         Tile(size_t _x, size_t _y, int _height, TileType _type) :
                 x(_x), y(_y), height(_height), type(_type) {}
 
-        void addCreature(Tribe *creature);
+        void addCreature(Tribe *tribe);
 
-        void removeCreature(Tribe *creature);
+        void removeCreature(Tribe *tribe);
 
         std::size_t x, y;
         int height;
 
         TileType type;
 
-        std::vector<Tribe *> creatures;
+        std::vector<Tribe *> tribes;
     };
 
 
@@ -77,7 +78,7 @@ namespace terrainGenerator {
         const unsigned char green[3] = {0, 255, 0};
         const unsigned char blue[3] = {0, 0, 255};
 
-        std::vector<double> probability = {0.7, 0.3, 0.0, 0.0};
+        std::vector<double> probability = {0.5, 0.3, 0.1, 0.1};
 
         int seed;
         std::size_t tileSize;

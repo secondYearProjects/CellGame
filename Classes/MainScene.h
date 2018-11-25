@@ -27,6 +27,7 @@
 
 #include "cocos2d.h"
 #include "Field.h"
+#include "random.h"
 
 #include <map>
 

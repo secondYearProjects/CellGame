@@ -24,13 +24,14 @@
 
 #include "MainScene.h"
 
-
 #include "SimpleAudioEngine.h"
 
 #include "terrainGenerator.h"
 
 
 USING_NS_CC;
+
+using Random = effolkronium::random_static;
 
 Scene *MainScene::createScene() {
     return MainScene::create();
@@ -59,17 +60,14 @@ bool MainScene::init() {
 
     Scene::addChild(backGround);
 
-    std::random_device rd;     // only used once to initialise (seed) engine
-    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(0, 8); // guaranteed unbiased
-    std::uniform_int_distribution<int> booly(0, 1);
+
     setField(Field::create());
-    field->createField(100);
-    for (int i = 0; i < 80; i++) {
-        if (booly(rd))
-            field->addCreature(uni(rng), uni(rng), "Meskwaki");
+    field->createField(10);
+    for (int i = 0; i < 10; i++) {
+        if (Random::get<bool>())
+            field->addTribe(Random::get(0,field->getN()-1), Random::get(0,field->getN()-1), "Meskwaki");
         else
-            field->addCreature(uni(rng), uni(rng), "Obunga");
+            field->addTribe(Random::get(0,field->getN()-1), Random::get(0,field->getN()-1), "Obunga");
     }
 
 

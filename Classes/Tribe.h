@@ -65,6 +65,14 @@ public:
 
     int getPower() const;
 
+    std::string getType();
+
+    int getTitleSize() const;
+
+private:
+// Constructor private to make misuse of this class difficult.
+    Tribe();    // Constructor declared but defined in the cpp file.
+    ~Tribe() {}  // Destructor declared and defined here.
 
     void setX(int _x);
 
@@ -76,16 +84,9 @@ public:
 
     void setTileSize(int _tileSize);
 
-    std::string getType();
-
-    int getTitleSize() const;
-
-private:
-// Constructor private to make misuse of this class difficult.
-    Tribe();    // Constructor declared but defined in the cpp file.
-    ~Tribe() {}  // Destructor declared and defined here.
-
     bool stepAvailable(int _x, int _y);
+
+
 
 
     int x, y;
@@ -100,12 +101,17 @@ private:
     int breedingSteps = 0;
     bool isPregnant = false;
 
+    std::vector<Person> people;
+
     static int const stepHealthChange = -5;
     static int const grassHeal = 5;
     static int const stepHeal = 2;
 
     static int const stepsToBreed = 3;
     static int const stepsToHunger = 5;
+
+    static int const startPeopleCount = 5;
+    static int const startSpecialPoints = 10;
 
     static float animationSpeed;
     static terrainGenerator::Terrain *field;

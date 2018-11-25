@@ -4,10 +4,13 @@
 
 #include "Person.h"
 
-bool success(float p) {
-    std::mt19937 rng(time(0));
-    std::uniform_real_distribution<float> d(0.0f, 1.0f);
-    return (p >= d(rng));
+using Random = effolkronium::random_static;
+
+bool Person::success(float p) {
+//    std::random_device rd;
+//    std::mt19937 rng(rd());
+//    std::uniform_real_distribution<float> d(0.0f, 1.0f);
+    return (p >= Random::get(0.0f, 1.0f));
 }
 
 void increaseAttribute(SPECIAL &special, int attribute, int val) {
@@ -42,18 +45,35 @@ void increaseAttribute(SPECIAL &special, int attribute, int val) {
 
 Person::Person() {
     ID = Person::MAX_ID;
+
+//    std::random_device rd;
+//    std::mt19937 rng(rd());
+//    std::uniform_int_distribution<int> gender(0, 1);
+//    std::uniform_int_distribution<int> maxHP(80, 200);
+//    std::uniform_int_distribution<int> nameD(0, 5);
+
+    const std::string names[6] = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu"};
+
+    male = Random::get<bool>();
+    maxHealth = Random::get(80, 200);
+
+    name = names[Random::get(0, 5)];
+
     Person::MAX_ID++;
 }
 
 
 Person::Person(int specialPoints) : Person() {
+    // SPECIAL generation
     if (specialPoints > (SPECIAL::maxAttribute - 1) * 7)
         specialPoints = (SPECIAL::maxAttribute - 1) * 7;
 
-    std::mt19937 rng(time(0));
-    std::uniform_int_distribution<int> d(0, 6);
+//    std::random_device rd;
+//    std::mt19937 rng(rd());
+//    std::uniform_int_distribution<int> d(0, 6);
+
     while (specialPoints > 0) {
-        increaseAttribute(attributes, d(rng), 1);
+        increaseAttribute(attributes, Random::get(0, 6), 1);
         specialPoints--;
     }
 }
@@ -99,5 +119,14 @@ void Person::step() {
     if (hunger < 0) {
         hunger -= static_cast<int>(hungerPerStep * (-hunger) *
                                    (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+    } else {
+        health += basicRegen * attributes.Endurance;
+    }
+
+    if (isPregnant) {
+        PregnantSteps++;
     }
 }
+
+
+

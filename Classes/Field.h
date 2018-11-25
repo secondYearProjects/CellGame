@@ -35,12 +35,14 @@ public:
 
     void createField(int n);
 
-    void addCreature(int x, int y, const std::string &type);
+    void addTribe(int x, int y, const std::string &type);
 
     static void setAnimationSpeed(float val) {
         AnimationSpeed = val;
         Tribe::setAnimationSpeed(val);
     }
+
+    int getN() const { return n;}
 
 private:
     // Constructor private to make misuse of this class difficult.

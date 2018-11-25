@@ -3,6 +3,7 @@
 //
 #include "terrainGenerator.h"
 
+using Random = effolkronium::random_static;
 
 void terrainGenerator::Terrain::createTexture() {
 
@@ -101,10 +102,10 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) 
 }
 
 
-void terrainGenerator::Tile::addCreature(Tribe *creature) {
-    creatures.push_back(creature);
+void terrainGenerator::Tile::addCreature(Tribe *tribe) {
+    tribes.push_back(tribe);
 }
 
-void terrainGenerator::Tile::removeCreature(Tribe *creature) {
-    creatures.erase(std::find(creatures.begin(), creatures.end(), creature));
+void terrainGenerator::Tile::removeCreature(Tribe *tribe) {
+    tribes.erase(std::find(tribes.begin(), tribes.end(), tribe));
 }

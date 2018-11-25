@@ -56,7 +56,7 @@ void Field::scaleBy(float duration, float scaleFactor) {
     }
 }
 
-void Field::addCreature(int x, int y, const std::string &type) {
+void Field::addTribe(int x, int y, const std::string &type) {
 
     auto newCreature = Tribe::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
     if (type == "Obunga")
@@ -74,7 +74,7 @@ void Field::addCreature(int x, int y, const std::string &type) {
 
 void Field::gameStep(float dt) {
     creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
-        //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
+        //if(terrain->getTile(creature->getX(),creature->getY()).tribes.size()>1)
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
             return true;
@@ -102,7 +102,7 @@ void Field::gameStep(float dt) {
     }
 
     creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
-        //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
+        //if(terrain->getTile(creature->getX(),creature->getY()).tribes.size()>1)
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
             return true;
