@@ -26,6 +26,8 @@ public:
 
     virtual bool init();
 
+    virtual void manage();
+
     static Tribe *
     createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
 
@@ -39,11 +41,11 @@ public:
 
     void changeHealthBy(int value);
 
+    void changeHealthTo(int value);
+
     virtual void deathAnimation();
 
     CreatureActions step();
-
-    virtual void manage();
 
     void walk(int _x, int _y);
 
@@ -52,8 +54,6 @@ public:
     static void setParrentTerrain(terrainGenerator::Terrain *_field) { Tribe::field = _field; }
 
     static terrainGenerator::Terrain *getParrentTerrain() { return Tribe::field; }
-
-    void breed();
 
     int getX() const;
 
@@ -86,7 +86,7 @@ private:
 
     bool stepAvailable(int _x, int _y);
 
-
+    void updateHealth();
 
 
     int x, y;
@@ -97,18 +97,10 @@ private:
     int maxHealth = 100;
 
     int power = 1;
-    int hungrySteps = 0;
-    int breedingSteps = 0;
-    bool isPregnant = false;
+
+    int food = 10;
 
     std::vector<Person> people;
-
-    static int const stepHealthChange = -5;
-    static int const grassHeal = 5;
-    static int const stepHeal = 2;
-
-    static int const stepsToBreed = 3;
-    static int const stepsToHunger = 5;
 
     static int const startPeopleCount = 5;
     static int const startSpecialPoints = 10;

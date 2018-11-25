@@ -104,6 +104,12 @@ void Tribe::manage() {
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
     std::uniform_int_distribution<int> uni(-1, 1); // guaranteed unbiased
 
+    for (auto &person:people) {
+        // TODO : here
+        person.eat(3);
+        food -= 3;
+    }
+
     int _x = uni(rng);
     int _y = uni(rng);
     walk(_x, _y);
@@ -169,27 +175,28 @@ void Tribe::changeHealthBy(int value) {
     this->runAction(tintTo);
 }
 
+void Tribe::changeHealthTo(int value) {
+    health = value;
+    if (health > maxHealth)
+        health = maxHealth;
+
+    auto tintTo = TintTo::create(animationSpeed, 255,
+                                 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)),
+                                 254.0f * (static_cast<float >(health) / static_cast<float >(maxHealth)));
+    this->runAction(tintTo);
+}
+
 CreatureActions Tribe::step() {
     CreatureActions actions;
     actions.breed = false;
     actions.fight = false;
     actions.fightDamage = 0;
 
-    if (hungrySteps > stepsToHunger)
-        changeHealthBy((hungrySteps - stepsToHunger) * stepHealthChange);
-    else {
-        changeHealthBy(stepHeal);
-        if (isPregnant)
-            breedingSteps++;
+    for (auto &person:people) {
+        person.step();
     }
 
-
-    // Pregnant check
-    if (breedingSteps > stepsToBreed) {
-        actions.breed = true;
-        breedingSteps = 0;
-        isPregnant = false;
-    }
+    updateHealth();
 
     // Fight & Breed
     if (!field->getTile(x, y).tribes.empty()) {
@@ -200,22 +207,20 @@ CreatureActions Tribe::step() {
                 actions.fight = true;
                 actions.fightDamage += enemy->getPower();
                 //log("fight");
-            } else if (enemy->getType() == this->getType() && enemy != this) {
-                if (!isPregnant) {
-                    isPregnant = true;
-                    //log("preg");
-                }
             }
         }
     }
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
-        changeHealthBy(grassHeal);
-        hungrySteps = 0;
     } else {
-        hungrySteps++;
+        food += people.size() * 4;
     }
+
+    people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
+        return (person.health <= 0);
+    }), people.end());
+    updateHealth();
 
     // Custom manage function
     manage();
@@ -227,11 +232,20 @@ float Tribe::animationSpeed = 0.1f;
 
 int Tribe::getPower() const { return power; }
 
-void Tribe::breed() {
+terrainGenerator::Terrain *Tribe::field = nullptr;
 
+void Tribe::updateHealth() {
+    int newHealth = 0;
+    int newMaxHealth = 0;
+    for (auto &person:people) {
+        newHealth += person.health;
+        newMaxHealth += person.maxHealth;
+    }
+    maxHealth = newMaxHealth;
+    changeHealthTo(newHealth);
 }
 
-terrainGenerator::Terrain *Tribe::field = nullptr;
+
 
 
 
