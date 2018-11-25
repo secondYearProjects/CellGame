@@ -118,18 +118,19 @@ bool MainScene::init() {
 
 void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
     float time = 0.2;
+    float fieldScale = field->getScale();
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
-            field->moveBy(Vec2(0, -10), time);
+            field->moveBy(Vec2(0, -10 * fieldScale), time);
             break;
         case EventKeyboard::KeyCode::KEY_S:
-            field->moveBy(Vec2(0, 10), time);
+            field->moveBy(Vec2(0, 10 * fieldScale), time);
             break;
         case EventKeyboard::KeyCode::KEY_A:
-            field->moveBy(Vec2(10, 0), time);
+            field->moveBy(Vec2(10 * fieldScale, 0), time);
             break;
         case EventKeyboard::KeyCode::KEY_D:
-            field->moveBy(Vec2(-10, 0), time);
+            field->moveBy(Vec2(-10 * fieldScale, 0), time);
             break;
 
         case EventKeyboard::KeyCode::KEY_EQUAL:
@@ -143,15 +144,23 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
             updateTickSchedule();
             break;
         case EventKeyboard::KeyCode::KEY_1:
-            setTickTime(1.0);
+            setTickTime(0.1f);
             updateTickSchedule();
             break;
         case EventKeyboard::KeyCode::KEY_2:
-            setTickTime(0.5);
+            setTickTime(0.3f);
             updateTickSchedule();
             break;
         case EventKeyboard::KeyCode::KEY_3:
-            setTickTime(0.1);
+            setTickTime(0.5f);
+            updateTickSchedule();
+            break;
+        case EventKeyboard::KeyCode::KEY_4:
+            setTickTime(0.8f);
+            updateTickSchedule();
+            break;
+        case EventKeyboard::KeyCode::KEY_5:
+            setTickTime(1.0f);
             updateTickSchedule();
             break;
         case EventKeyboard::KeyCode::KEY_ESCAPE:
@@ -199,5 +208,5 @@ std::map<cocos2d::EventKeyboard::KeyCode,
 
 float MainScene::tickTime = 0.1f;
 
-Field * MainScene::field = nullptr;
+Field *MainScene::field = nullptr;
 

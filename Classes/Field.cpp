@@ -50,10 +50,10 @@ void Field::update(float dt) {
 }
 
 void Field::scaleBy(float duration, float scaleFactor) {
-    //if (currentScale * scaleFactor < MAX_SCALE && currentScale * scaleFactor > MIN_SCALE) {
-    runAction(ScaleBy::create(duration, scaleFactor));
-    currentScale *= scaleFactor;
-    //}
+    float fieldScale = this->getScale();
+    if (fieldScale * scaleFactor < MAX_SCALE && fieldScale * scaleFactor > MIN_SCALE) {
+        runAction(ScaleBy::create(duration, scaleFactor));
+    }
 }
 
 void Field::addCreature(int x, int y, const std::string &type) {

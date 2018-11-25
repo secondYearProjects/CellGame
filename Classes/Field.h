@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#define MAX_SCALE 8.0
+#define MAX_SCALE 5.0
 #define MIN_SCALE 0.05
 
 
