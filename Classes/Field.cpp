@@ -25,7 +25,7 @@ void Field::createField(int _n) {
     terrainGenerator::Terrain *newTerrain = new terrainGenerator::Terrain(n, 1337, tileSize);
 
     Field::setTerrain(newTerrain);
-    Creature::setParrentTerrain(newTerrain);
+    Tribe::setParrentTerrain(newTerrain);
 
     auto terrainImage = Sprite::create(terrain->getTextureName());
     terrainImage->setAnchorPoint(Vec2(0, 0));
@@ -58,7 +58,7 @@ void Field::scaleBy(float duration, float scaleFactor) {
 
 void Field::addCreature(int x, int y, const std::string &type) {
 
-    auto newCreature = Creature::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
+    auto newCreature = Tribe::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
     if (type == "lizzard")
         newCreature->setTexture("lizzard.png");
 
@@ -73,7 +73,7 @@ void Field::addCreature(int x, int y, const std::string &type) {
 }
 
 void Field::gameStep(float dt) {
-    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Creature *creature) {
+    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
         //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
@@ -101,7 +101,7 @@ void Field::gameStep(float dt) {
         }
     }
 
-    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Creature *creature) {
+    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
         //if(terrain->getTile(creature->getX(),creature->getY()).creatures.size()>1)
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
@@ -116,7 +116,7 @@ void Field::gameStep(float dt) {
 //terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
 
 
-std::vector<Creature *> Field::creatures;
+std::vector<Tribe *> Field::creatures;
 
 terrainGenerator::Terrain *Field::terrain = nullptr;
 

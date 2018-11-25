@@ -6,7 +6,7 @@
 #define TEMPLATECPP_FIELD_H
 
 #include "cocos2d.h"
-#include "Creature.h"
+#include "Tribe.h"
 #include "terrainGenerator.h"
 
 #include <vector>
@@ -39,7 +39,7 @@ public:
 
     static void setAnimationSpeed(float val) {
         AnimationSpeed = val;
-        Creature::setAnimationSpeed(val);
+        Tribe::setAnimationSpeed(val);
     }
 
 private:
@@ -51,7 +51,7 @@ private:
     int n;
     float currentScale = 1.0;
     static terrainGenerator::Terrain *terrain;
-    static std::vector<Creature *> creatures;
+    static std::vector<Tribe *> creatures;
 
     static float AnimationSpeed;
 

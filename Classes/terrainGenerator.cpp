@@ -92,19 +92,19 @@ const char *const terrainGenerator::Terrain::getTexturePath(terrainGenerator::Ti
     return "Resourсes/Tiles/imageError.png";
 }
 
-void terrainGenerator::Terrain::addCreature(int _x, int _y, Creature *creature) {
+void terrainGenerator::Terrain::addCreature(int _x, int _y, Tribe *creature) {
     terrainMap[_x][_y].addCreature(creature);
 }
 
-void terrainGenerator::Terrain::removeCreature(int _x, int _y, Creature *creature) {
+void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) {
     terrainMap[_x][_y].removeCreature(creature);
 }
 
 
-void terrainGenerator::Tile::addCreature(Creature *creature) {
+void terrainGenerator::Tile::addCreature(Tribe *creature) {
     creatures.push_back(creature);
 }
 
-void terrainGenerator::Tile::removeCreature(Creature *creature) {
+void terrainGenerator::Tile::removeCreature(Tribe *creature) {
     creatures.erase(std::find(creatures.begin(), creatures.end(), creature));
 }

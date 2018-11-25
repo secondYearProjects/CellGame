@@ -2,7 +2,7 @@
 // Created by sju on 14.11.18.
 //
 
-#include "Creature.h"
+#include "Tribe.h"
 
 #include <random>
 #include <ctime>
@@ -10,35 +10,35 @@
 USING_NS_CC;
 
 
-Creature::Creature() {
+Tribe::Tribe() {
 }
 
-bool Creature::init() {
+bool Tribe::init() {
     if (!Sprite::init())
         return false;
     return true;
 }
 
-void Creature::onEnter() {
+void Tribe::onEnter() {
     Node::onEnter();
 }
 
-void Creature::moveBy(Vec2 vec, float secs) {
+void Tribe::moveBy(Vec2 vec, float secs) {
     runAction(MoveBy::create(secs, vec));
 
 }
 
-void Creature::update(float dt) {
+void Tribe::update(float dt) {
     Node::update(dt);
 }
 
-void Creature::moveTo(cocos2d::Vec2 vec, float secs) {
+void Tribe::moveTo(cocos2d::Vec2 vec, float secs) {
     runAction(MoveBy::create(secs, vec));
 
 }
 
-Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
-    auto creature = new Creature();
+Tribe *Tribe::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::string _type, std::string path) {
+    auto creature = new Tribe();
 
     if (creature && creature->initWithFile(path)) {
         creature->setX(_x);
@@ -55,7 +55,7 @@ Creature *Creature::createCreatureSprite(int _x, int _y, int _tileSize, int _n, 
     return nullptr;
 }
 
-void Creature::walk(int _x, int _y) {
+void Tribe::walk(int _x, int _y) {
     int newX = x + _x;
     int newY = y + _y;
     if (!stepAvailable(_x, _y))
@@ -69,7 +69,7 @@ void Creature::walk(int _x, int _y) {
     y += _y;
 }
 
-void Creature::manage() {
+void Tribe::manage() {
     std::random_device rd;     // only used once to initialise (seed) engine
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
     std::uniform_int_distribution<int> uni(-1, 1); // guaranteed unbiased
@@ -80,35 +80,35 @@ void Creature::manage() {
 
 }
 
-void Creature::deathAnimation() {
+void Tribe::deathAnimation() {
     setTexture("deadChar.png");
 
     runAction(FadeOut::create(animationSpeed * 10.0f));
     field->removeCreature(x, y, this);
 }
 
-void Creature::setX(int _x) { x = _x; }
+void Tribe::setX(int _x) { x = _x; }
 
-void Creature::setY(int _y) { y = _y; }
+void Tribe::setY(int _y) { y = _y; }
 
-void Creature::setN(int _n) { n = _n; }
+void Tribe::setN(int _n) { n = _n; }
 
-void Creature::setType(const std::string &_type) { type = _type; }
+void Tribe::setType(const std::string &_type) { type = _type; }
 
-void Creature::setTileSize(int _tileSize) { tileSize = _tileSize; }
+void Tribe::setTileSize(int _tileSize) { tileSize = _tileSize; }
 
-int Creature::getX() const { return x; }
+int Tribe::getX() const { return x; }
 
-int Creature::getY() const { return y; }
+int Tribe::getY() const { return y; }
 
-int Creature::getN() const { return n; }
+int Tribe::getN() const { return n; }
 
-std::string Creature::getType() { return type; }
+std::string Tribe::getType() { return type; }
 
-int Creature::getTitleSize() const { return tileSize; }
+int Tribe::getTitleSize() const { return tileSize; }
 
 
-bool Creature::stepAvailable(int _x, int _y) {
+bool Tribe::stepAvailable(int _x, int _y) {
     int newX = x + _x;
     int newY = y + _y;
     if (newX < 0 || newY < 0) {
@@ -126,9 +126,9 @@ bool Creature::stepAvailable(int _x, int _y) {
     return true;
 }
 
-int Creature::getHealth() const { return health; }
+int Tribe::getHealth() const { return health; }
 
-void Creature::changeHealthBy(int value) {
+void Tribe::changeHealthBy(int value) {
     health = (value + health);
     if (health > maxHealth)
         health = maxHealth;
@@ -138,7 +138,7 @@ void Creature::changeHealthBy(int value) {
     this->runAction(tintTo);
 }
 
-CreatureActions Creature::step() {
+CreatureActions Tribe::step() {
     CreatureActions actions;
     actions.breed = false;
     actions.fight = false;
@@ -192,15 +192,15 @@ CreatureActions Creature::step() {
     return actions;
 }
 
-float Creature::animationSpeed = 0.1f;
+float Tribe::animationSpeed = 0.1f;
 
-int Creature::getPower() const { return power; }
+int Tribe::getPower() const { return power; }
 
-void Creature::breed() {
+void Tribe::breed() {
 
 }
 
-terrainGenerator::Terrain *Creature::field = nullptr;
+terrainGenerator::Terrain *Tribe::field = nullptr;
 
 
 

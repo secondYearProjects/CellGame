@@ -19,13 +19,13 @@ struct CreatureActions {
     int fightDamage = 0;
 };
 
-class Creature : public cocos2d::Sprite {
+class Tribe : public cocos2d::Sprite {
 public:
-    CREATE_FUNC(Creature);
+    CREATE_FUNC(Tribe);
 
     virtual bool init();
 
-    static Creature *
+    static Tribe *
     createCreatureSprite(int x, int y, int tileSize, int n, std::string _type, std::string path);
 
     virtual void onEnter();
@@ -70,18 +70,18 @@ public:
 
     void walk(int _x, int _y);
 
-    static void setAnimationSpeed(float speed) { Creature::animationSpeed = speed; }
+    static void setAnimationSpeed(float speed) { Tribe::animationSpeed = speed; }
 
-    static void setParrentTerrain(terrainGenerator::Terrain *_field) { Creature::field = _field; }
+    static void setParrentTerrain(terrainGenerator::Terrain *_field) { Tribe::field = _field; }
 
-    static terrainGenerator::Terrain * getParrentTerrain() { return Creature::field; }
+    static terrainGenerator::Terrain * getParrentTerrain() { return Tribe::field; }
 
     void breed();
 
 private:
 // Constructor private to make misuse of this class difficult.
-    Creature();    // Constructor declared but defined in the cpp file.
-    ~Creature() {}  // Destructor declared and defined here.
+    Tribe();    // Constructor declared but defined in the cpp file.
+    ~Tribe() {}  // Destructor declared and defined here.
 
     bool stepAvailable(int _x, int _y);
 

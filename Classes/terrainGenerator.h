@@ -17,7 +17,7 @@
 
 #define cimg_use_png
 
-class Creature;
+class Tribe;
 namespace terrainGenerator {
 
 
@@ -34,16 +34,16 @@ namespace terrainGenerator {
         Tile(size_t _x, size_t _y, int _height, TileType _type) :
                 x(_x), y(_y), height(_height), type(_type) {}
 
-        void addCreature(Creature *creature);
+        void addCreature(Tribe *creature);
 
-        void removeCreature(Creature *creature);
+        void removeCreature(Tribe *creature);
 
         std::size_t x, y;
         int height;
 
         TileType type;
 
-        std::vector<Creature *> creatures;
+        std::vector<Tribe *> creatures;
     };
 
 
@@ -59,10 +59,10 @@ namespace terrainGenerator {
 
         Tile &changeTile(std::size_t x, std::size_t y) { return terrainMap[x][y]; }
 
-        void addCreature(int _x, int _y, Creature *creature);
+        void addCreature(int _x, int _y, Tribe *creature);
 
 
-        void removeCreature(int _x, int _y, Creature *creature);
+        void removeCreature(int _x, int _y, Tribe *creature);
 
         std::string getTexturePath() const;
 
