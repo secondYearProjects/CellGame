@@ -46,13 +46,9 @@ public:
 
     void setTileSize(int _tileSize);
 
-    void makePregnant();
-
     void changeHealthBy(int value);
 
     virtual void deathAnimation();
-
-    void setPicture(std::string path);
 
     int getX() const;
 
@@ -94,7 +90,7 @@ private:
     int x, y;
     int tileSize;
     int n;
-    std::string type = "human";
+    std::string type = "Obunga";
     int health = 100;
     int maxHealth = 100;
 

@@ -67,9 +67,9 @@ bool MainScene::init() {
     field->createField(100);
     for (int i = 0; i < 80; i++) {
         if (booly(rd))
-            field->addCreature(uni(rng), uni(rng), "lizzard");
+            field->addCreature(uni(rng), uni(rng), "Meskwaki");
         else
-            field->addCreature(uni(rng), uni(rng), "human");
+            field->addCreature(uni(rng), uni(rng), "Obunga");
     }
 
 

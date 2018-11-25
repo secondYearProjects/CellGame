@@ -61,13 +61,9 @@ void Creature::walk(int _x, int _y) {
     if (!stepAvailable(_x, _y))
         return;
 
-
     field->removeCreature(x, y, this);
     field->addCreature(newX, newY, this);
-    //Creature::getParrentTerrain()->changeTile(x, y).creatures.push_back(this);
 
-    //log("current tile %i", field->getTile(x, y).type);
-    //log("%i %i", x, y);
     runAction(MoveBy::create(animationSpeed, Vec2(_x * tileSize, _y * tileSize)));
     x += _x;
     y += _y;
@@ -85,19 +81,11 @@ void Creature::manage() {
 }
 
 void Creature::deathAnimation() {
-    //setAnchorPoint(Vec2(0.5, 0.5));
-    //moveBy(Vec2(tileSize / 2, tileSize / 2), 0);
-    //runAction(ScaleBy::create(5.0, 0.0));
     setTexture("deadChar.png");
 
     runAction(FadeOut::create(animationSpeed * 10.0f));
     field->removeCreature(x, y, this);
 }
-
-void Creature::setPicture(std::string path) {
-    setTexture("deadChar.png");
-}
-
 
 void Creature::setX(int _x) { x = _x; }
 
@@ -205,10 +193,6 @@ CreatureActions Creature::step() {
 }
 
 float Creature::animationSpeed = 0.1f;
-
-void Creature::makePregnant() {
-    isPregnant = true;
-}
 
 int Creature::getPower() const { return power; }
 
