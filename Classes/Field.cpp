@@ -68,32 +68,22 @@ void Field::addTribe(int x, int y, const std::string &type) {
 
     addChild(newCreature);
 
-    creatures.push_back(newCreature);
+    tribes.push_back(newCreature);
     terrain->addCreature(x, y, newCreature);
 }
 
 void Field::gameStep(float dt) {
-    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
-        //if(terrain->getTile(creature->getX(),creature->getY()).tribes.size()>1)
+    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *creature) {
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
             return true;
         }
         return false;
-    }), creatures.end());
+    }), tribes.end());
 
-    struct BreedStruct {
-        BreedStruct(int _x, int _y, std::string _type) : x(_x), y(_y), type(std::move(_type)) {}
 
-        int x;
-        int y;
-        std::string type;
-    };
-
-    std::vector<BreedStruct> newBorn;
-
-    for (int i = 0; i < creatures.size(); i++) {
-        auto &creature = creatures[i];
+    for (int i = 0; i < tribes.size(); i++) {
+        auto &creature = tribes[i];
 
         CreatureActions action = creature->step();
         if (action.fight) {
@@ -101,14 +91,13 @@ void Field::gameStep(float dt) {
         }
     }
 
-    creatures.erase(std::remove_if(creatures.begin(), creatures.end(), [=](Tribe *creature) {
-        //if(terrain->getTile(creature->getX(),creature->getY()).tribes.size()>1)
+    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *creature) {
         if (creature->getHealth() < 0) {
             creature->deathAnimation();
             return true;
         }
         return false;
-    }), creatures.end());
+    }), tribes.end());
 
 }
 
@@ -116,7 +105,7 @@ void Field::gameStep(float dt) {
 //terrainGenerator::Terrain &Field::getTerrain() { return *terrain; }
 
 
-std::vector<Tribe *> Field::creatures;
+std::vector<Tribe *> Field::tribes;
 
 terrainGenerator::Terrain *Field::terrain = nullptr;
 

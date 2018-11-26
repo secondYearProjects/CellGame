@@ -106,8 +106,10 @@ void Tribe::manage() {
 
     for (auto &person:people) {
         // TODO : here
-        person.eat(3);
-        food -= 3;
+        if (food > 3) {
+            person.eat(3);
+            food -= 3;
+        }
     }
 
     int _x = uni(rng);
@@ -214,10 +216,12 @@ CreatureActions Tribe::step() {
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
     } else {
-        food += people.size() * 4;
+        food += people.size()*2;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
+        if (person.health <= 0)
+            log("dead");
         return (person.health <= 0);
     }), people.end());
     updateHealth();

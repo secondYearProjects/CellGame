@@ -56,7 +56,7 @@ Person::Person() {
 
     male = Random::get<bool>();
     maxHealth = Random::get(80, 200);
-
+    health = maxHealth;
     name = names[Random::get(0, 5)];
 
     Person::MAX_ID++;
@@ -116,8 +116,10 @@ void Person::eat(int foodAmount) { hunger += foodAmount; }
 void Person::recieveDamage(int val) { health -= val; }
 
 void Person::step() {
+    hunger -= static_cast<int>(hungerPerStep * (-hunger) *
+                               (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     if (hunger < 0) {
-        hunger -= static_cast<int>(hungerPerStep * (-hunger) *
+        health -= static_cast<int>(hunger *
                                    (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     } else {
         health += basicRegen * attributes.Endurance;

@@ -53,7 +53,7 @@ private:
     int n;
     float currentScale = 1.0;
     static terrainGenerator::Terrain *terrain;
-    static std::vector<Tribe *> creatures;
+    static std::vector<Tribe *> tribes;
 
     static float AnimationSpeed;
 
