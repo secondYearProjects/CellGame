@@ -55,7 +55,7 @@ Person::Person() {
     const std::string names[6] = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu"};
 
     male = Random::get<bool>();
-    maxHealth = Random::get(80, 200);
+    maxHealth = Random::get(800, 2000);
     health = maxHealth;
     name = names[Random::get(0, 5)];
 

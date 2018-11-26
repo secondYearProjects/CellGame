@@ -58,24 +58,24 @@ void Field::scaleBy(float duration, float scaleFactor) {
 
 void Field::addTribe(int x, int y, const std::string &type) {
 
-    auto newCreature = Tribe::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
+    auto newTribe = Tribe::createCreatureSprite(x % n, y % n, tileSize, n, type, "character.png");
     if (type == "Obunga")
-        newCreature->setTexture("lizzard.png");
+        newTribe->setTexture("lizzard.png");
 
-    newCreature->setScale(tileSize / newCreature->getContentSize().width);
-    newCreature->setAnchorPoint(Vec2(0, 0));
-    newCreature->setZOrder(1);
+    newTribe->setScale(tileSize / newTribe->getContentSize().width);
+    newTribe->setAnchorPoint(Vec2(0, 0));
+    newTribe->setZOrder(1);
 
-    addChild(newCreature);
+    addChild(newTribe);
 
-    tribes.push_back(newCreature);
-    terrain->addCreature(x, y, newCreature);
+    tribes.push_back(newTribe);
+    terrain->addCreature(x, y, newTribe);
 }
 
 void Field::gameStep(float dt) {
-    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *creature) {
-        if (creature->getHealth() < 0) {
-            creature->deathAnimation();
+    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *tribe) {
+        if (tribe->getHealth() < 0) {
+            tribe->deathAnimation();
             return true;
         }
         return false;
@@ -83,17 +83,17 @@ void Field::gameStep(float dt) {
 
 
     for (int i = 0; i < tribes.size(); i++) {
-        auto &creature = tribes[i];
+        auto &tribe = tribes[i];
 
-        CreatureActions action = creature->step();
+        CreatureActions action = tribe->step();
         if (action.fight) {
-            creature->changeHealthBy(-action.fightDamage);
+            tribe->changeHealthBy(-action.fightDamage);
         }
     }
 
-    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *creature) {
-        if (creature->getHealth() < 0) {
-            creature->deathAnimation();
+    tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *tribe) {
+        if (tribe->peopleCount() == 0) {
+            tribe->deathAnimation();
             return true;
         }
         return false;

@@ -65,6 +65,8 @@ public:
 
     int getPower() const;
 
+    int peopleCount() const { return people.size(); }
+
     std::string getType();
 
     int getTitleSize() const;

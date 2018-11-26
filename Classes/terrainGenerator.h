@@ -78,7 +78,7 @@ namespace terrainGenerator {
         const unsigned char green[3] = {0, 255, 0};
         const unsigned char blue[3] = {0, 0, 255};
 
-        std::vector<double> probability = {0.1, 0.7, 0.1, 0.1};
+        std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
         int seed;
         std::size_t tileSize;

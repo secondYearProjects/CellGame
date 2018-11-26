@@ -216,7 +216,7 @@ CreatureActions Tribe::step() {
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
     } else {
-        food += people.size()*2;
+        food += people.size() * 3;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
@@ -242,8 +242,10 @@ void Tribe::updateHealth() {
     int newHealth = 0;
     int newMaxHealth = 0;
     for (auto &person:people) {
-        newHealth += person.health;
-        newMaxHealth += person.maxHealth;
+        if (person.health > 0) {
+            newHealth += person.health;
+            newMaxHealth += person.maxHealth;
+        }
     }
     maxHealth = newMaxHealth;
     changeHealthTo(newHealth);
