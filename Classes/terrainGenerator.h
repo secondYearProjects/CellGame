@@ -10,7 +10,6 @@
 #include "png.h"
 #include "CCImage.h"
 #include "random.h"
-#include "PerlinNoise.h"
 #include "FastNoise.h"
 
 #include <string>
