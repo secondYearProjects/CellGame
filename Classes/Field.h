@@ -8,6 +8,7 @@
 #include "cocos2d.h"
 #include "Tribe.h"
 #include "terrainGenerator.h"
+#include "random.h"
 
 #include <vector>
 

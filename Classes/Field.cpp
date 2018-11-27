@@ -9,6 +9,8 @@
 
 USING_NS_CC;
 
+using Random = effolkronium::random_static;
+
 Field::Field() {
 }
 
@@ -22,7 +24,7 @@ bool Field::init() {
 void Field::createField(int _n) {
     this->n = _n;
 
-    terrainGenerator::Terrain *newTerrain = new terrainGenerator::Terrain(n, 1337, tileSize);
+    terrainGenerator::Terrain *newTerrain = new terrainGenerator::Terrain(n, Random::get(0, 2000), tileSize);
 
     Field::setTerrain(newTerrain);
     Tribe::setParrentTerrain(newTerrain);
