@@ -133,4 +133,12 @@ void Person::step() {
 }
 
 
+int Person::basicAttack = 1;
+int Person::basicRegen = 1;
+int Person::pregnancyPerion = 10;
+int Person::hungerPerAttack = 5;
+int Person::hungerPerStep = 2;
+int Person::stepsBeforBreed = 20;
+
+
 

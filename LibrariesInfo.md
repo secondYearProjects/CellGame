@@ -10,8 +10,8 @@ As a bad thing goes the size of a hello-world project (~330Mb) so to transport y
 I think cocos2d-x is a correct solution to create 2d game with c++.
 
 
-### 2) <a href="https://github.com/Reputeless/PerlinNoise"> siv::PerlinNoise </a>
-Header-only Perlin noise library for modern C++.
+### 2) <a href="https://github.com/Auburns/FastNoise"> FastNoise </a>
+Noise library for modern C++.
 Easy to use library with efficient code for this task. Nothing more to say :)
 
 

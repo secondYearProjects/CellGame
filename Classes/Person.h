@@ -28,7 +28,6 @@ struct SPECIAL {
 };
 
 
-
 void increaseAttribute(SPECIAL &special, int attribute, int val);
 
 class Person {
@@ -45,6 +44,17 @@ public:
 
     void eat(int foodAmount);
 
+    static void
+    setPersonParams(int _basicAttack, int _basicRegen, int _pregnancyPerion, int _hungerPerAttack, int _hungerPerStep,
+                    int _stepsBeforBreed) {
+
+        Person::basicAttack = _basicAttack;
+        Person::basicRegen = _basicRegen;
+        Person::pregnancyPerion = _pregnancyPerion;
+        Person::hungerPerAttack = _hungerPerAttack;
+        Person::hungerPerStep = _hungerPerStep;
+        Person::stepsBeforBreed = _stepsBeforBreed;
+    }
 
 private:
     bool success(float p);
@@ -72,12 +82,12 @@ private:
     bool isPregnant = false;
     int PregnantSteps = 0;
 
-    static const int basicAttack = 1;
-    static const int basicRegen = 1;
-    static const int pregnancyPerion = 10;
-    static const int hungerPerAttack = 5;
-    static const int hungerPerStep = 2;
-    static const int stepsBeforBreed = 20;
+    static int basicAttack;
+    static int basicRegen;
+    static int pregnancyPerion;
+    static int hungerPerAttack;
+    static int hungerPerStep;
+    static int stepsBeforBreed;
 
 
     static int MAX_ID;

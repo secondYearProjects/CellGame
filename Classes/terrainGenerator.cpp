@@ -25,11 +25,13 @@ void terrainGenerator::Terrain::createTexture() {
 
     canvas.draw_fill(0, 0, white);
 
+    generateHeightMap();
+
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             int typeID = d(rng);
 
-            terrainMap[i][n - j - 1] = Tile(i, j, 0, TileType(typeID));
+            terrainMap[i][n - j - 1].assign(i, j, TileType(typeID));
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[TileType(typeID)]);
         }
     }
@@ -102,7 +104,25 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) 
 }
 
 void terrainGenerator::Terrain::generateHeightMap() {
+    cl::CImg<double> canvas((n * tileSize) * 2, (n * tileSize) * 2);
+    canvas.channels(0, 3);
 
+    FastNoise perlin(seed);
+    perlin.SetNoiseType(FastNoise::Perlin);
+
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            double height = perlin.GetNoise(i,j);
+            double heightColor[3] = {height*255, height*255, height*255};
+
+            terrainMap[i][n - j - 1].height = height;
+            canvas.draw_rectangle(i * tileSize * 2, j * tileSize * 2, i * tileSize * 4, j * tileSize * 4, heightColor);
+
+        }
+    }
+    //canvas.draw_rectangle(0, 0, 10, 10, white);
+    canvas.save(heightMap);
 }
 
 
@@ -112,4 +132,14 @@ void terrainGenerator::Tile::addCreature(Tribe *tribe) {
 
 void terrainGenerator::Tile::removeCreature(Tribe *tribe) {
     tribes.erase(std::find(tribes.begin(), tribes.end(), tribe));
+}
+
+void terrainGenerator::Tile::assign(size_t _x, size_t _y, terrainGenerator::TileType _type) {
+    this->x = _x;
+    this->y = _y;
+    this->type = _type;
+}
+
+double clamp(double x, double upper, double lower) {
+    return std::min(upper, std::max(x, lower));
 }

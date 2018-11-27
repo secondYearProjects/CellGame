@@ -82,8 +82,7 @@ void Field::gameStep(float dt) {
     }), tribes.end());
 
 
-    for (int i = 0; i < tribes.size(); i++) {
-        auto &tribe = tribes[i];
+    for (auto &tribe : tribes) {
 
         CreatureActions action = tribe->step();
         if (action.fight) {

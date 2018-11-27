@@ -51,7 +51,7 @@ bool MainScene::init() {
         return false;
     }
 
-    setTickTime(0.1f);
+    setTickTime(0.5f);
 
 
     CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
@@ -62,8 +62,8 @@ bool MainScene::init() {
 
 
     setField(Field::create());
-    field->createField(10);
-    for (int i = 0; i < 100; i++) {
+    field->createField(30);
+    for (int i = 0; i < 30; i++) {
         if (Random::get<bool>())
             field->addTribe(Random::get(0,field->getN()-1), Random::get(0,field->getN()-1), "Meskwaki");
         else

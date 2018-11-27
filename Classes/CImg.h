@@ -17710,7 +17710,7 @@ _cimg_mp_scalar1(mp_bitwise_not,arg1);
 }
 
 for (s = se3, ns = se2; s>ss; --s, --ns)
-if (*s=='^' && *ns=='^' && level[s - expr._data]==clevel) { // Complex power ('^^')
+if (*s=='^' && *ns=='^' && level[s - expr._data]==clevel) { // Complex attackPower ('^^')
 _cimg_mp_op("Operator '^^'");
 arg1 = compile(ss,s,depth1,0,is_single);
 arg2 = compile(s + 2,se,depth1,0,is_single);

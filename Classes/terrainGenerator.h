@@ -11,13 +11,18 @@
 #include "CCImage.h"
 #include "random.h"
 #include "PerlinNoise.h"
+#include "FastNoise.h"
 
 #include <string>
 #include <vector>
 #include <random>
+#include <algorithm>
 
 
 #define cimg_use_png
+
+double clamp(double x, double upper, double lower);
+
 
 class Tribe;
 namespace terrainGenerator {
@@ -33,17 +38,20 @@ namespace terrainGenerator {
     public:
         Tile() = default;
 
-        Tile(size_t _x, size_t _y, int _height, TileType _type) :
-                x(_x), y(_y), height(_height), type(_type) {}
+        Tile(size_t _x, size_t _y, TileType _type, double _height = 0.0f) :
+                x(_x), y(_y), type(_type), height(_height) {}
+
+        void assign(size_t _x, size_t _y, TileType _type);
 
         void addCreature(Tribe *tribe);
 
         void removeCreature(Tribe *tribe);
 
-        std::size_t x, y;
-        int height;
+        std::size_t x = 0;
+        std::size_t y = 0;
+        double height = 0.0f;
 
-        TileType type;
+        TileType type = TileType::dirt;
 
         std::vector<Tribe *> tribes;
     };
@@ -82,9 +90,9 @@ namespace terrainGenerator {
         std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
 
-        int seed;
-        std::size_t tileSize;
-        std::size_t n;
+        uint32_t seed = 1337;
+        std::size_t tileSize = 30;
+        std::size_t n = 10;
         const char *const texturePath = "Resources/fieldTexture.png";
         const char *const heightMap = "Resources/heightMap.png";
 

@@ -42,6 +42,14 @@ Tribe::Tribe() {
                   << person.attributes.Agility << " "
                   << person.attributes.Luck << "\n";
     }
+
+    peopleLabel = cocos2d::Label::createWithSystemFont("5", "Arial", 24);
+    peopleLabel->setTextColor(cocos2d::Color4B(20, 20, 20, 255));
+    peopleLabel->setAnchorPoint(Vec2(-1.95f, -0.6f));
+    peopleLabel->setAlignment(TextHAlignment::CENTER);
+    peopleLabel->setString(std::to_string(peopleCount()));
+    addChild(peopleLabel);
+
     std::cout << std::endl;
 }
 
@@ -81,6 +89,8 @@ Tribe *Tribe::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::s
 
         tribe->autorelease();
         tribe->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
+
+
         return tribe;
     }
 
@@ -88,6 +98,9 @@ Tribe *Tribe::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::s
 }
 
 void Tribe::walk(int _x, int _y) {
+    if (std::abs(_x) > walkLimit || std::abs(_y) > walkLimit)
+        return;
+
     int newX = x + _x;
     int newY = y + _y;
     if (!stepAvailable(_x, _y))
@@ -222,11 +235,11 @@ CreatureActions Tribe::step() {
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
-        if (person.health <= 0)
-            log("dead");
         return (person.health <= 0);
     }), people.end());
     updateHealth();
+    updateAttack();
+    peopleLabel->setString(std::to_string(peopleCount()));
 
     // Custom manage function
     manage();
@@ -236,7 +249,7 @@ CreatureActions Tribe::step() {
 
 float Tribe::animationSpeed = 0.1f;
 
-int Tribe::getPower() const { return power; }
+int Tribe::getPower() const { return attackPower; }
 
 terrainGenerator::Terrain *Tribe::field = nullptr;
 
@@ -253,8 +266,20 @@ void Tribe::updateHealth() {
     changeHealthTo(newHealth);
 }
 
+void Tribe::updateAttack() {
+    int newAttack = 0;
+    for (auto &person:people) {
+        if (person.health > 0) {
+            newAttack += person.attack();
+        }
+    }
+    attackPower = newAttack;
+}
 
 
+int Tribe::startPeopleCount = 5;
+int Tribe::startSpecialPoints = 10;
 
+int Tribe::walkLimit = 1;
 
 

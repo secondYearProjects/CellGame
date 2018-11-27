@@ -11,6 +11,8 @@
 #include "terrainGenerator.h"
 #include "Person.h"
 
+#include <memory>
+
 
 class Field;
 
@@ -71,10 +73,40 @@ public:
 
     int getTitleSize() const;
 
+    static void setTribeParams(int _startPeopleCount, int _startSpecialPoints, int _walkLimit) {
+        Tribe::startPeopleCount = _startPeopleCount;
+        Tribe::startSpecialPoints = _startSpecialPoints;
+        Tribe::walkLimit = _walkLimit;
+    }
+
+protected:
+    int x, y;
+    int tileSize;
+    int n;
+    std::string type = "Obunga";
+    int health = 100;
+    int maxHealth = 100;
+
+    int attackPower = 1;
+
+    int food = 10;
+
+    std::vector<Person> people;
+
+    static int startPeopleCount;
+    static int startSpecialPoints;
+
+    static int walkLimit;
+
+    static float animationSpeed;
+    static terrainGenerator::Terrain *field;
+
 private:
-// Constructor private to make misuse of this class difficult.
-    Tribe();    // Constructor declared but defined in the cpp file.
-    ~Tribe() {}  // Destructor declared and defined here.
+    cocos2d::Label *peopleLabel;
+
+    Tribe();
+
+    virtual ~Tribe() {}
 
     void setX(int _x);
 
@@ -90,25 +122,7 @@ private:
 
     void updateHealth();
 
-
-    int x, y;
-    int tileSize;
-    int n;
-    std::string type = "Obunga";
-    int health = 100;
-    int maxHealth = 100;
-
-    int power = 1;
-
-    int food = 10;
-
-    std::vector<Person> people;
-
-    static int const startPeopleCount = 5;
-    static int const startSpecialPoints = 10;
-
-    static float animationSpeed;
-    static terrainGenerator::Terrain *field;
+    void updateAttack();
 };
 
 
