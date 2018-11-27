@@ -119,10 +119,10 @@ void Person::recieveDamage(int val) { health -= val; }
 
 void Person::step() {
     hunger -= static_cast<int>(hungerPerStep * (-hunger) *
-                               (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+                               (1.5f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     if (hunger < 0) {
         health -= static_cast<int>(hunger *
-                                   (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+                                   (1.5f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     } else {
         health += basicRegen * attributes.Endurance;
     }

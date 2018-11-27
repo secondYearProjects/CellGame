@@ -88,6 +88,8 @@ namespace terrainGenerator {
 
         std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
+        std::vector<double> levels = {0.4, 0.5, 0.8, 1.0};
+
 
         uint32_t seed = 1337;
         std::size_t tileSize = 30;
@@ -109,6 +111,8 @@ namespace terrainGenerator {
         cl::CImg<unsigned char> loadTile(const char *const tileTexture, int width, int heigt, bool replaceAlpha = true);
 
         const char *const getTexturePath(TileType tileType);
+
+        TileType tileByHeight(double height);
     };
 }
 

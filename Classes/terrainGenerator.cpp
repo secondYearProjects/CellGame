@@ -29,7 +29,7 @@ void terrainGenerator::Terrain::createTexture() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            int typeID = d(rng);
+            int typeID = tileByHeight(terrainMap[i][n - j - 1].height);
 
             terrainMap[i][n - j - 1].assign(i, j, TileType(typeID));
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[TileType(typeID)]);
@@ -108,12 +108,13 @@ void terrainGenerator::Terrain::generateHeightMap() {
     canvas.channels(0, 3);
 
     FastNoise perlin(seed);
-    perlin.SetNoiseType(FastNoise::Perlin);
-
+    perlin.SetNoiseType(FastNoise::PerlinFractal);
+    perlin.SetFractalOctaves(8);
+    perlin.SetFrequency(50.2);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            double height = perlin.GetNoise(i+1, j+1);
+            double height = perlin.GetNoise(i + 1, j + 1);
             double heightColor[3] = {height * 255, height * 255, height * 255};
 
             terrainMap[i][n - j - 1].height = height;
@@ -124,6 +125,15 @@ void terrainGenerator::Terrain::generateHeightMap() {
     //canvas.draw_rectangle(0, 0, 10, 10, white);
     //canvas.display(0, false, 0, true);
     canvas.save(heightMap);
+}
+
+terrainGenerator::TileType terrainGenerator::Terrain::tileByHeight(double height) {
+    for (int i = 0; i < levels.size(); i++) {
+        if (height <= levels[i]) {
+            return TileType(i);
+        }
+    }
+    return TileType::grass;
 }
 
 
