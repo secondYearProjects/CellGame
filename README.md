@@ -1,6 +1,9 @@
 ## CellGame
 
-#### 100% not  a cell game
+#### 100% not a cell game
+
+## Used libraries info
+<a href="https://github.com/secondYearProjects/CellGame/blob/master/LibrariesInfo.md"> Here </a>
 
 ## How to run
 1) <a href="https://github.com/secondYearProjects/CellGame/releases"> Download </a> latest built binary of CellGame
