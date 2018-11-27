@@ -10,6 +10,7 @@
 #include "cocos2d.h"
 #include "terrainGenerator.h"
 #include "Person.h"
+#include "random.h"
 
 #include <memory>
 

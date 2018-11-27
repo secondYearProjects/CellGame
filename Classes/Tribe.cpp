@@ -11,6 +11,7 @@
 
 USING_NS_CC;
 
+using Random = effolkronium::random_static;
 
 Tribe::Tribe() {
     people.reserve(startPeopleCount);
@@ -115,9 +116,6 @@ void Tribe::walk(int _x, int _y) {
 }
 
 void Tribe::manage() {
-    std::random_device rd;     // only used once to initialise (seed) engine
-    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(-1, 1); // guaranteed unbiased
 
     for (auto &person:people) {
         // TODO : here
@@ -126,9 +124,11 @@ void Tribe::manage() {
             food -= 3;
         }
     }
+    if (field->getTile(x, y).type == terrainGenerator::TileType::grass)
+        return;
 
-    int _x = uni(rng);
-    int _y = uni(rng);
+    int _x = Random::get<int>(-1, 1);
+    int _y = Random::get<int>(-1, 1);
     walk(_x, _y);
 
 }
