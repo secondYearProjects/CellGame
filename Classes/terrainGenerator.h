@@ -16,12 +16,16 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <cmath>
 
 
 #define cimg_use_png
 
 double clamp(double x, double upper, double lower);
 
+double sigmoid(double x);
+
+double linearNormalize(double x, double a, double b);
 
 class Tribe;
 namespace terrainGenerator {
@@ -30,7 +34,7 @@ namespace terrainGenerator {
     namespace cl = cimg_library;
 
     enum TileType {
-        grass = 0, dirt, water, sand
+        water = 0, sand, dirt, grass
     };
 
     class Tile {
@@ -86,10 +90,11 @@ namespace terrainGenerator {
         const unsigned char green[3] = {0, 255, 0};
         const unsigned char blue[3] = {0, 0, 255};
 
-        std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
+        //std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
-        std::vector<double> levels = {0.4, 0.5, 0.8, 1.0};
-
+        std::vector<double> levels = {0.2, 0.3, 0.6, 1.0};
+        double minHeight = 100.0;
+        double maxHeight = -100.0;
 
         uint32_t seed = 1337;
         std::size_t tileSize = 30;

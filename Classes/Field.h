@@ -43,12 +43,13 @@ public:
         Tribe::setAnimationSpeed(val);
     }
 
-    int getN() const { return n;}
+    int getN() const { return n; }
 
 private:
-    // Constructor private to make misuse of this class difficult.
-    Field();    // Constructor declared but defined in the cpp file.
-    ~Field() { delete terrain; }  // Destructor declared and defined here.
+
+    Field();
+
+    ~Field() { delete terrain; }
 
     int tileSize = 30;
     int n;

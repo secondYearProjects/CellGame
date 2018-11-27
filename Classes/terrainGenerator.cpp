@@ -6,21 +6,15 @@
 using Random = effolkronium::random_static;
 
 void terrainGenerator::Terrain::createTexture() {
-
-    std::mt19937 rng(seed);
-    std::uniform_int_distribution<int> tileRange(0, 3);
-    std::discrete_distribution<> d(probability.begin(), probability.end());
-
-
     cl::CImg<unsigned char> canvas((n * tileSize) * 2, (n * tileSize) * 2);
     canvas.channels(0, 3);
 
     // load tile textures.
     std::vector<cl::CImg<unsigned char> > tiles = {
-            loadTile(getTexturePath(TileType::grass), tileSize * 2, tileSize * 2),
-            loadTile(getTexturePath(TileType::dirt), tileSize * 2, tileSize * 2),
             loadTile(getTexturePath(TileType::water), tileSize * 2, tileSize * 2),
-            loadTile(getTexturePath(TileType::sand), tileSize * 2, tileSize * 2)
+            loadTile(getTexturePath(TileType::sand), tileSize * 2, tileSize * 2),
+            loadTile(getTexturePath(TileType::dirt), tileSize * 2, tileSize * 2),
+            loadTile(getTexturePath(TileType::grass), tileSize * 2, tileSize * 2)
     };
 
     canvas.draw_fill(0, 0, white);
@@ -29,10 +23,11 @@ void terrainGenerator::Terrain::createTexture() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            int typeID = tileByHeight(terrainMap[i][n - j - 1].height);
+            terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
+            TileType tileType = tileByHeight(terrainMap[i][n - j - 1].height);
+            terrainMap[i][n - j - 1].assign(i, j, tileType);
 
-            terrainMap[i][n - j - 1].assign(i, j, TileType(typeID));
-            canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[TileType(typeID)]);
+            canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
         }
     }
 
@@ -115,6 +110,12 @@ void terrainGenerator::Terrain::generateHeightMap() {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             double height = perlin.GetNoise(i + 1, j + 1);
+
+            if (height > maxHeight)
+                maxHeight = height;
+            if (height < minHeight)
+                minHeight = height;
+
             double heightColor[3] = {height * 255, height * 255, height * 255};
 
             terrainMap[i][n - j - 1].height = height;
@@ -153,4 +154,13 @@ void terrainGenerator::Tile::assign(size_t _x, size_t _y, terrainGenerator::Tile
 
 double clamp(double x, double upper, double lower) {
     return std::min(upper, std::max(x, lower));
+}
+
+double sigmoid(double x) {
+    return 1 / (1 + std::exp(-x));
+}
+
+double linearNormalize(double x, double a, double b) {
+
+    return (x - a) / (b - a);
 }

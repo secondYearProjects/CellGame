@@ -235,7 +235,7 @@ CreatureActions Tribe::step() {
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
     } else {
-        food += people.size() * 3;
+        food += people.size() * 4;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
