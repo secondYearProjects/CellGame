@@ -30,6 +30,8 @@ Tribe::Tribe() {
         people[0].male = false;
     }
 
+    updateHealth();
+
     for (auto person:people) {
         std::cout << person.name << ": "
                   << person.attributes.Strength << " "

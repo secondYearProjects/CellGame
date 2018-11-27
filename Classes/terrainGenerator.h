@@ -9,12 +9,13 @@
 #include "zlib.h"
 #include "png.h"
 #include "CCImage.h"
-
+#include "random.h"
+#include "PerlinNoise.h"
 
 #include <string>
 #include <vector>
 #include <random>
-#include "random.h"
+
 
 #define cimg_use_png
 
@@ -80,10 +81,13 @@ namespace terrainGenerator {
 
         std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
+
         int seed;
         std::size_t tileSize;
         std::size_t n;
         const char *const texturePath = "Resources/fieldTexture.png";
+        const char *const heightMap = "Resources/heightMap.png";
+
 
         std::vector<std::vector<Tile> > terrainMap;
 
@@ -92,6 +96,8 @@ namespace terrainGenerator {
         void greenscreen(cl::CImg<unsigned char> &img,
                          const unsigned char changeFrom[3],
                          const unsigned char changeTo[3]);
+
+        void generateHeightMap();
 
         cl::CImg<unsigned char> loadTile(const char *const tileTexture, int width, int heigt, bool replaceAlpha = true);
 

@@ -52,12 +52,14 @@ Person::Person() {
 //    std::uniform_int_distribution<int> maxHP(80, 200);
 //    std::uniform_int_distribution<int> nameD(0, 5);
 
-    const std::string names[6] = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu"};
+    const std::vector<std::string> names = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu", "Fefe", "Doro", "Abekwa",
+                                            "Onu", "Abbiba"};
 
     male = Random::get<bool>();
     maxHealth = Random::get(800, 2000);
     health = maxHealth;
-    name = names[Random::get(0, 5)];
+    name = names[Random::get<std::size_t>(0, names.size() - 1)];
+
 
     Person::MAX_ID++;
 }

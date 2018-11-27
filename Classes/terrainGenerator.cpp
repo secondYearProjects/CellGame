@@ -101,6 +101,10 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) 
     terrainMap[_x][_y].removeCreature(creature);
 }
 
+void terrainGenerator::Terrain::generateHeightMap() {
+
+}
+
 
 void terrainGenerator::Tile::addCreature(Tribe *tribe) {
     tribes.push_back(tribe);
