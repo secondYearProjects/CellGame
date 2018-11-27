@@ -135,9 +135,13 @@ void Tribe::manage() {
 
 void Tribe::deathAnimation() {
     setTexture("deadChar.png");
-
-    runAction(FadeOut::create(animationSpeed * 10.0f));
+    peopleLabel->setString(std::to_string(peopleCount()));
+    removeAllChildren();
     field->removeCreature(x, y, this);
+
+    auto fade = FadeOut::create(animationSpeed * 10.0f);
+    auto seq = Sequence::create(fade, [=] { this->removeFromParent(); }, nullptr);
+    runAction(seq);
 }
 
 void Tribe::setX(int _x) { x = _x; }

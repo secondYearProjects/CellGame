@@ -74,13 +74,12 @@ void Field::addTribe(int x, int y, const std::string &type) {
 
 void Field::gameStep(float dt) {
     tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *tribe) {
-        if (tribe->getHealth() < 0) {
+        if (tribe->peopleCount() == 0) {
             tribe->deathAnimation();
             return true;
         }
         return false;
     }), tribes.end());
-
 
     for (auto &tribe : tribes) {
 

@@ -113,8 +113,8 @@ void terrainGenerator::Terrain::generateHeightMap() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            double height = perlin.GetNoise(i,j);
-            double heightColor[3] = {height*255, height*255, height*255};
+            double height = perlin.GetNoise(i+1, j+1);
+            double heightColor[3] = {height * 255, height * 255, height * 255};
 
             terrainMap[i][n - j - 1].height = height;
             canvas.draw_rectangle(i * tileSize * 2, j * tileSize * 2, i * tileSize * 4, j * tileSize * 4, heightColor);
@@ -122,6 +122,7 @@ void terrainGenerator::Terrain::generateHeightMap() {
         }
     }
     //canvas.draw_rectangle(0, 0, 10, 10, white);
+    //canvas.display(0, false, 0, true);
     canvas.save(heightMap);
 }
 
