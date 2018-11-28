@@ -87,7 +87,8 @@ void Field::gameStep(float dt) {
 
         CreatureActions action = tribe->step();
         if (action.fight) {
-            tribe->changeHealthBy(-action.fightDamage);
+            //tribe->changeHealthBy(-action.fightDamage);
+            // TODO: fight damage distributor
         }
     }
 

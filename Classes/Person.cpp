@@ -118,8 +118,8 @@ void Person::eat(int foodAmount) { hunger += foodAmount; }
 void Person::recieveDamage(int val) { health -= val; }
 
 void Person::step() {
-    hunger -= static_cast<int>(hungerPerStep * (-hunger) *
-                               (1.5f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+    hunger -= static_cast<int>(hungerPerStep *
+                               (1.0f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     if (hunger < 0) {
         health -= static_cast<int>(hunger *
                                    (1.5f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
