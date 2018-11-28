@@ -92,7 +92,7 @@ namespace terrainGenerator {
 
         //std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
-        std::vector<double> levels = {0.2, 0.3, 0.6, 1.0};
+        std::vector<double> levels = {0.2, 0.4, 0.6, 1.0};
         double minHeight = 100.0;
         double maxHeight = -100.0;
 

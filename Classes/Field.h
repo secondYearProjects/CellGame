@@ -29,6 +29,7 @@ public:
     //terrainGenerator::Terrain &getTerrain();
 
     void moveBy(cocos2d::Vec2 vec, float secs);
+    void moveTo(cocos2d::Vec2 vec, float secs);
 
     void scaleBy(float duration, float scaleFactor);
 

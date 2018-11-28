@@ -111,3 +111,7 @@ std::vector<Tribe *> Field::tribes;
 terrainGenerator::Terrain *Field::terrain = nullptr;
 
 float Field::AnimationSpeed = 0.1f;
+
+void Field::moveTo(cocos2d::Vec2 vec, float secs) {
+    runAction(MoveTo::create(secs, vec));
+}

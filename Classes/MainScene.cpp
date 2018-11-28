@@ -63,11 +63,11 @@ bool MainScene::init() {
 
     setField(Field::create());
     field->createField(30);
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 8; i++) {
         if (Random::get<bool>())
-            field->addTribe(Random::get(0,field->getN()-1), Random::get(0,field->getN()-1), "Meskwaki");
+            field->addTribe(Random::get(0, field->getN() - 1), Random::get(0, field->getN() - 1), "Meskwaki");
         else
-            field->addTribe(Random::get(0,field->getN()-1), Random::get(0,field->getN()-1), "Obunga");
+            field->addTribe(Random::get(0, field->getN() - 1), Random::get(0, field->getN() - 1), "Obunga");
     }
 
 
@@ -130,6 +130,23 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
         case EventKeyboard::KeyCode::KEY_D:
             field->moveBy(Vec2(-10 * fieldScale, 0), time);
             break;
+
+        case EventKeyboard::KeyCode::KEY_UP_ARROW:
+            field->moveBy(Vec2(0, -10 * fieldScale), time);
+            break;
+        case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
+            field->moveBy(Vec2(0, 10 * fieldScale), time);
+            break;
+        case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+            field->moveBy(Vec2(10 * fieldScale, 0), time);
+            break;
+        case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+            field->moveBy(Vec2(-10 * fieldScale, 0), time);
+            break;
+
+//        case EventKeyboard::KeyCode::KEY_Q:
+//            field->moveTo(Vec2(0, 0), time);
+//            break;
 
         case EventKeyboard::KeyCode::KEY_EQUAL:
             field->scaleBy(time, 1.4);

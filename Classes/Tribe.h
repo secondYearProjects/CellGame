@@ -81,6 +81,8 @@ public:
     }
 
 protected:
+    void feed(Person &person, std::size_t foodAmount);
+
     int x, y;
     int tileSize;
     int n;

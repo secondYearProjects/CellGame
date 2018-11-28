@@ -116,19 +116,22 @@ void Tribe::walk(int _x, int _y) {
 }
 
 void Tribe::manage() {
-
+    log("%s",type.c_str());
+    log("food %i", food);
     for (auto &person:people) {
-        // TODO : here
-        if (food > 3) {
-            person.eat(3);
-            food -= 3;
+        if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
+
+            feed(person, 10);
+            person.stats();
         }
     }
-    if (field->getTile(x, y).type == terrainGenerator::TileType::grass)
-        return;
+    log("food %i", food);
+    std::cout << std::endl;
+    //if (field->getTile(x, y).type == terrainGenerator::TileType::grass)
+    //    return;
 
-    int _x = Random::get<int>(-1, 1);
-    int _y = Random::get<int>(-1, 1);
+    int _x = Random::get<int>(-walkLimit, walkLimit);
+    int _y = Random::get<int>(-walkLimit, walkLimit);
     walk(_x, _y);
 
 }
@@ -234,8 +237,7 @@ CreatureActions Tribe::step() {
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
-    } else {
-        food += people.size() * 4;
+        food += people.size() * 5;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
@@ -285,5 +287,12 @@ int Tribe::startPeopleCount = 5;
 int Tribe::startSpecialPoints = 10;
 
 int Tribe::walkLimit = 1;
+
+void Tribe::feed(Person &person, std::size_t foodAmount) {
+    if (food > foodAmount) {
+        person.eat(foodAmount);
+        food -= foodAmount;
+    }
+}
 
 

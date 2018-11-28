@@ -103,9 +103,9 @@ void terrainGenerator::Terrain::generateHeightMap() {
     canvas.channels(0, 3);
 
     FastNoise perlin(seed);
-    perlin.SetNoiseType(FastNoise::PerlinFractal);
-    perlin.SetFractalOctaves(8);
-    perlin.SetFrequency(50.2);
+    perlin.SetNoiseType(FastNoise::Perlin);
+    perlin.SetFractalOctaves(6);
+    perlin.SetFrequency(0.3);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -125,6 +125,7 @@ void terrainGenerator::Terrain::generateHeightMap() {
     }
     //canvas.draw_rectangle(0, 0, 10, 10, white);
     //canvas.display(0, false, 0, true);
+
     canvas.save(heightMap);
 }
 

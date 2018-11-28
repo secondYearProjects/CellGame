@@ -53,10 +53,11 @@ Person::Person() {
 //    std::uniform_int_distribution<int> nameD(0, 5);
 
     const std::vector<std::string> names = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu", "Fefe", "Doro", "Abekwa",
-                                            "Onu", "Abbiba"};
+                                            "Onu", "Abbiba", "Ubuntu", "Kali", "Shindows", "Debian", "Biba", "Boba",
+                                            "Sasuke", "Uzumaki"};
 
     male = Random::get<bool>();
-    maxHealth = Random::get(800, 2000);
+    maxHealth = Random::get(100, 200);
     health = maxHealth;
     name = names[Random::get<std::size_t>(0, names.size() - 1)];
 
@@ -113,18 +114,23 @@ int Person::calculateAttack() {
     return static_cast<int>(damage);
 }
 
-void Person::eat(int foodAmount) { hunger += foodAmount; }
+void Person::eat(std::size_t foodAmount) {
+    hunger += foodAmount;
+    //std::cout << "hunger + " << hunger << std::endl;
+}
 
 void Person::recieveDamage(int val) { health -= val; }
 
 void Person::step() {
     hunger -= static_cast<int>(hungerPerStep *
-                               (1.0f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+                               (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     if (hunger < 0) {
-        health -= static_cast<int>(hunger *
-                                   (1.5f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+        health -= static_cast<int>(10 * static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute);
+        //std::cout << "--hp " << health << " hunger " << hunger << std::endl;
     } else {
-        health += basicRegen * attributes.Endurance;
+
+        heal(basicRegen * attributes.Endurance);
+        std::cout << "heal\n";
     }
 
     if (isPregnant) {
@@ -132,13 +138,25 @@ void Person::step() {
     }
 }
 
+int Person::getHunger() const { return hunger; }
+
+void Person::heal(int ammount) {
+    if (health + ammount > maxHealth)
+        health = maxHealth;
+    else
+        health += ammount;
+}
 
 int Person::basicAttack = 1;
 int Person::basicRegen = 1;
 int Person::pregnancyPerion = 10;
 int Person::hungerPerAttack = 5;
-int Person::hungerPerStep = 2;
+int Person::hungerPerStep = 3;
 int Person::stepsBeforBreed = 20;
+
+
+
+
 
 
 

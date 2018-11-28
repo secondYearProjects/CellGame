@@ -11,6 +11,7 @@
 #include <vector>
 #include <ctime>
 #include <cmath>
+#include <iostream>
 
 
 class Tribe;
@@ -42,7 +43,13 @@ public:
 
     int attack();
 
-    void eat(int foodAmount);
+    void eat(std::size_t foodAmount);
+
+    int getHunger() const;
+
+    void stats() {
+        std::cout << "hp: " << health << " hunger: " << -hunger << std::endl;
+    }
 
     static void
     setPersonParams(int _basicAttack, int _basicRegen, int _pregnancyPerion, int _hungerPerAttack, int _hungerPerStep,
@@ -63,6 +70,8 @@ private:
 
     void step();
 
+    void heal(int ammount);
+
     void recieveDamage(int val);
 
     int ID;
@@ -72,7 +81,7 @@ private:
     int health = 100;
     int maxHealth = 100;
 
-    int hunger = -1;
+    int hunger = 10;
 
     SPECIAL attributes;
 
