@@ -81,7 +81,7 @@ private:
     int health = 100;
     int maxHealth = 100;
 
-    int hunger = 10;
+    int hunger = 20;
 
     SPECIAL attributes;
 

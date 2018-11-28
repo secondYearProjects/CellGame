@@ -153,8 +153,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="297.17787"
-     inkscape:cy="539.83513"
+     inkscape:cx="343.96358"
+     inkscape:cy="282.69227"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -232,10 +232,11 @@
        height="30.000002"
        x="69.288689"
        y="227.19345"
-       style="fill:#964700;fill-opacity:1;stroke:#77461c;stroke-width:0.69999999;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#d0a680;fill-opacity:1;stroke:#77461c;stroke-width:0.69999999;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        ry="3.9687457"
        inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="/home/sju/work/CellGame/Resources/Tiles/dirt.png" />
     <rect
        id="rect3713-36-7-3"
        width="30.000002"

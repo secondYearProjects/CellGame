@@ -122,15 +122,15 @@ void Person::eat(std::size_t foodAmount) {
 void Person::recieveDamage(int val) { health -= val; }
 
 void Person::step() {
-    hunger -= static_cast<int>(hungerPerStep *
-                               (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
-    if (hunger < 0) {
+    this->hunger -= static_cast<int>(hungerPerStep *
+                                     (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+    if (this->hunger < 0) {
         health -= static_cast<int>(10 * static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute);
         //std::cout << "--hp " << health << " hunger " << hunger << std::endl;
     } else {
 
         heal(basicRegen * attributes.Endurance);
-        std::cout << "heal\n";
+        //std::cout << "heal\n";
     }
 
     if (isPregnant) {

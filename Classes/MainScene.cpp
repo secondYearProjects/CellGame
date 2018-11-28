@@ -117,6 +117,7 @@ bool MainScene::init() {
 void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
     float time = 0.2;
     float fieldScale = field->getScale();
+    fieldScale = fieldScale > 1.0 ? fieldScale : 2.0f;
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
             field->moveBy(Vec2(0, -10 * fieldScale), time);

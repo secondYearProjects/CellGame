@@ -116,7 +116,7 @@ void Tribe::walk(int _x, int _y) {
 }
 
 void Tribe::manage() {
-    log("%s",type.c_str());
+    log("%s", type.c_str());
     log("food %i", food);
     for (auto &person:people) {
         if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
@@ -240,7 +240,7 @@ CreatureActions Tribe::step() {
         food += people.size() * 5;
     }
 
-    people.erase(std::remove_if(people.begin(), people.end(), [=](Person person) {
+    people.erase(std::remove_if(people.begin(), people.end(), [=](Person &person) {
         return (person.health <= 0);
     }), people.end());
     updateHealth();
@@ -289,9 +289,12 @@ int Tribe::startSpecialPoints = 10;
 int Tribe::walkLimit = 1;
 
 void Tribe::feed(Person &person, std::size_t foodAmount) {
-    if (food > foodAmount) {
+    if (food >= foodAmount) {
         person.eat(foodAmount);
         food -= foodAmount;
+    } else {
+        person.eat(food);
+        food = 0;
     }
 }
 
