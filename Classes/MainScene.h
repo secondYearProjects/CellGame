@@ -26,8 +26,12 @@
 #define __MainScene_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
+
 #include "Field.h"
 #include "random.h"
+#include "terrainGenerator.h"
+//#include "ui/CocosGUI.h"
 
 #include <map>
 
@@ -47,6 +51,8 @@ public:
 
 
 private:
+    std::vector<std::string> creatureTypes = {"Player", "Obunga", "Meskwaki"};
+
     static Field *field;
     static float tickTime;
 

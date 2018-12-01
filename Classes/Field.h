@@ -39,6 +39,8 @@ public:
 
     void createField(int n);
 
+    terrainGenerator::TileType getTileType(int _x, int _y);
+
     void addTribe(int x, int y, const std::string &type);
 
     static void setAnimationSpeed(float val) {

@@ -51,6 +51,7 @@ Tribe::Tribe() {
     peopleLabel->setString(std::to_string(peopleCount()));
     addChild(peopleLabel);
 
+
     std::cout << std::endl;
 }
 
@@ -120,9 +121,8 @@ void Tribe::manage() {
     log("food %i", food);
     for (auto &person:people) {
         //if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
-
+        if (person.getHunger() < 10)
             feed(person, 5);
-
         person.stats();
     }
     log("food %i", food);
@@ -237,7 +237,7 @@ CreatureActions Tribe::step() {
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
-        food += people.size() * 5;
+        food += people.size() * 3;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person &person) {
@@ -288,7 +288,7 @@ int Tribe::startSpecialPoints = 10;
 
 int Tribe::walkLimit = 1;
 
-void Tribe::feed(Person &person, std::size_t foodAmount) {
+void Tribe:: feed(Person &person, std::size_t foodAmount) {
     if (food >= foodAmount) {
         person.eat(foodAmount);
         food -= foodAmount;

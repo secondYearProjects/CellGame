@@ -17,7 +17,7 @@ void terrainGenerator::Terrain::createTexture() {
             loadTile(getTexturePath(TileType::grass), tileSize * 2, tileSize * 2)
     };
 
-    canvas.draw_fill(0, 0, white);
+    //canvas.draw_fill(0, 0, white);
 
     generateHeightMap();
 
@@ -28,7 +28,7 @@ void terrainGenerator::Terrain::createTexture() {
     cl::CImg<double> chunkCanvas((chunkSize * tileSize) * 2, (chunkSize * tileSize) * 2);
     chunkCanvas.channels(0, 3);
 
-    smoothHeights(4);
+    //smoothHeights(4);
 
     // generate height map chunks
     for (int chunkRow = 0; chunkRow < lineChunks; chunkRow++) {
@@ -41,6 +41,9 @@ void terrainGenerator::Terrain::createTexture() {
                 int jDraw = 0;
                 for (int j = chunkCol * chunkSize; j < chunkCol * chunkSize + chunkSize; j++, jDraw++) {
 
+                    terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height,
+                                                                      minHeight,
+                                                                      maxHeight);
                     double height = terrainMap[i][n - j - 1].height;
 
                     double heightColor[3] = {height * 255, height * 255, height * 255};
@@ -65,8 +68,8 @@ void terrainGenerator::Terrain::createTexture() {
                 int jDraw = 0;
                 for (int j = chunkCol * chunkSize; j < chunkCol * chunkSize + chunkSize; j++, jDraw++) {
 
-                    double height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
-                    terrainMap[i][n - j - 1].height = height;
+                    double height = terrainMap[i][n - j - 1].height;
+
                     TileType tileType = tileByHeight(height);
                     terrainMap[i][n - j - 1].assign(i, j, tileType);
 
@@ -102,12 +105,12 @@ void terrainGenerator::Terrain::createTexture() {
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
         }
     }
-    // height color filter
-    cl::CImg<unsigned char> heightFilter = loadTile(heightMap, 2 * tileSize * n, 2 * tileSize * n);
-
-    canvas.draw_image(0, 0, heightFilter, 0.1);
-
-
+//    // height color filter
+//    cl::CImg<unsigned char> heightFilter = loadTile(heightMap, 2 * tileSize * n, 2 * tileSize * n);
+//
+//    canvas.draw_image(0, 0, heightFilter, 0.1);
+//
+//
     canvas.save(texturePath);
 }
 
@@ -176,27 +179,27 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) 
 }
 
 void terrainGenerator::Terrain::generateHeightMap() {
-    FastNoise perlin1(seed);
-    perlin1.SetNoiseType(FastNoise::Perlin);
-    perlin1.SetFractalOctaves(6);
-    perlin1.SetFrequency(0.3);
+    FastNoise noise1(seed);
+    noise1.SetNoiseType(FastNoise::Cellular);
+    //noise1.SetFractalOctaves(5);
+    noise1.SetFrequency(0.25);
 
-    FastNoise perlin2(seed);
-    perlin2.SetNoiseType(FastNoise::Perlin);
-    perlin2.SetFractalOctaves(6);
-    perlin2.SetFrequency(0.4);
+    FastNoise noise2(seed);
+    noise2.SetNoiseType(FastNoise::Cellular);
+    //noise2.SetFractalOctaves(5);
+    noise2.SetFrequency(0.15);
 
-    FastNoise perlin3(seed);
-    perlin3.SetNoiseType(FastNoise::Perlin);
-    perlin3.SetFractalOctaves(6);
-    perlin3.SetFrequency(0.6);
+    FastNoise noise3(seed);
+    noise3.SetNoiseType(FastNoise::PerlinFractal);
+    noise3.SetFractalOctaves(5);
+    noise3.SetFrequency(0.1);
 
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            double height = 1 * perlin1.GetNoise(i + 2, j + 2) +
-                            0.5 * perlin2.GetNoise(i + 2, j + 2) +
-                            0.25 * perlin3.GetNoise(i + 2, j + 2);
+            double height = 1 * noise1.GetNoise(i + 2, j + 2) +
+                            0.1 * noise2.GetNoise(i + 2, j + 2) +
+                            0.25 * noise3.GetNoise(i + 2, j + 2);
 
             if (height > maxHeight)
                 maxHeight = height;

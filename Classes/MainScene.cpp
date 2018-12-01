@@ -26,8 +26,6 @@
 
 #include "SimpleAudioEngine.h"
 
-#include "terrainGenerator.h"
-
 
 USING_NS_CC;
 
@@ -43,18 +41,15 @@ static void problemLoading(const char *filename) {
     printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
 }
 
-// on "init" you need to initialize your instance
 bool MainScene::init() {
-    //////////////////////////////
-    // 1. super init first
+    // 1. Scene context init first
     if (!Scene::init()) {
         return false;
     }
 
     setTickTime(0.5f);
 
-
-    CCLayerColor *backGround = CCLayerColor::create(Color4B(255, 255, 255, 255));
+    auto backGround = cocos2d::LayerColor::create(Color4B(255, 255, 255, 255));
 
     backGround->setPosition(Vec2(0, 0));
 
@@ -62,14 +57,20 @@ bool MainScene::init() {
 
 
     setField(Field::create());
-    field->createField(100);
-    for (int i = 0; i < 8; i++) {
-        if (Random::get<bool>())
-            field->addTribe(Random::get(0, field->getN() - 1), Random::get(0, field->getN() - 1), "Meskwaki");
-        else
-            field->addTribe(Random::get(0, field->getN() - 1), Random::get(0, field->getN() - 1), "Obunga");
-    }
+    field->createField(50);
 
+    for (auto &creatureType:creatureTypes) {
+        for (int i = 0; i < 8; i++) {
+            for (int tryCount = 0; tryCount < 100; tryCount++) {
+                int xSpawn = Random::get(0, field->getN() - 1);
+                int ySpawn = Random::get(0, field->getN() - 1);
+                if (field->getTileType(xSpawn, ySpawn) != terrainGenerator::TileType::water) {
+                    field->addTribe(xSpawn, ySpawn, creatureType);
+                    break;
+                }
+            }
+        }
+    }
 
     field->setAnchorPoint(Vec2(0.5, 0.5));
 
@@ -107,7 +108,53 @@ bool MainScene::init() {
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
 
-    //log("pos field %i %i", field->getPositionX(), field->getPositionY());
+
+    auto SpeedNormal = cocos2d::ui::Button::create("normal-speed.png", "normal-speed-dis.png");
+    auto SpeedX2 = cocos2d::ui::Button::create("x2-speed.png", "x2-speed-dis.png");
+    auto SpeedX3 = cocos2d::ui::Button::create("x3-speed.png", "x3-speed-dis.png");
+
+
+    int buttonSize = 40;
+
+    SpeedNormal->setAnchorPoint(Vec2(0, 0));
+    SpeedX2->setAnchorPoint(Vec2(0, 0));
+    SpeedX3->setAnchorPoint(Vec2(0, 0));
+
+    SpeedNormal->setScale(buttonSize / SpeedNormal->getContentSize().width);
+    SpeedX2->setScale(buttonSize / SpeedX2->getContentSize().width);
+    SpeedX3->setScale(buttonSize / SpeedX3->getContentSize().width);
+
+    float buttonX = this->getPositionX() + this->getContentSize().width;
+    float buttonY = this->getPositionY() + 20;
+
+    SpeedNormal->setPosition(Vec2(buttonX - buttonSize * 3, buttonY));
+    SpeedX2->setPosition(Vec2(buttonX - buttonSize * 2, buttonY));
+    SpeedX3->setPosition(Vec2(buttonX - buttonSize * 1, buttonY));
+
+    SpeedNormal->setEnabled(true);
+    SpeedX2->setEnabled(false);
+    SpeedX3->setEnabled(false);
+
+
+    SpeedNormal->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                break;
+            case ui::Widget::TouchEventType::ENDED:
+                std::cout << "Button 1 clicked" << std::endl;
+                break;
+            default:
+                break;
+        }
+    });
+
+    // TODO: here add speed change by buttons
+
+    this->addChild(SpeedNormal);
+    this->addChild(SpeedX2);
+    this->addChild(SpeedX3);
+
 
     this->scheduleUpdate();
     this->schedule(schedule_selector(Field::gameStep), tickTime);
@@ -231,4 +278,3 @@ std::map<cocos2d::EventKeyboard::KeyCode,
 float MainScene::tickTime = 0.1f;
 
 Field *MainScene::field = nullptr;
-

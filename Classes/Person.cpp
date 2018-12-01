@@ -115,7 +115,10 @@ int Person::calculateAttack() {
 }
 
 void Person::eat(std::size_t foodAmount) {
-    hunger += foodAmount;
+    if (hunger + foodAmount > maxHunger)
+        hunger = maxHunger;
+    else
+        hunger += foodAmount;
     //std::cout << "hunger + " << hunger << std::endl;
 }
 
@@ -153,8 +156,9 @@ int Person::basicAttack = 1;
 int Person::basicRegen = 1;
 int Person::pregnancyPerion = 10;
 int Person::hungerPerAttack = 5;
-int Person::hungerPerStep = 3;
+int Person::hungerPerStep = 20;
 int Person::stepsBeforBreed = 20;
+int Person::maxHunger = 100;
 
 
 

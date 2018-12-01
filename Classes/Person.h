@@ -51,6 +51,7 @@ public:
         std::cout << "hp: " << health << " hunger: " << hunger << std::endl;
     }
 
+    static int getMaxHunger() { return maxHunger; }
 
 
     static void
@@ -83,7 +84,7 @@ private:
     int health = 100;
     int maxHealth = 100;
 
-    int hunger = 20;
+    int hunger = 10;
 
     SPECIAL attributes;
 
@@ -99,6 +100,7 @@ private:
     static int hungerPerAttack;
     static int hungerPerStep;
     static int stepsBeforBreed;
+    static int maxHunger;
 
 
     static int MAX_ID;
