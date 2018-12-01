@@ -125,10 +125,12 @@ void Person::step() {
     this->hunger -= static_cast<int>(hungerPerStep *
                                      (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
     if (this->hunger < 0) {
+        //health -= 3;
         health -= static_cast<int>(10 * static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute);
         //std::cout << "--hp " << health << " hunger " << hunger << std::endl;
     } else {
 
+        //health += 4;
         heal(basicRegen * attributes.Endurance);
         //std::cout << "heal\n";
     }

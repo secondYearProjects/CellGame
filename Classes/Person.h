@@ -48,8 +48,10 @@ public:
     int getHunger() const;
 
     void stats() {
-        std::cout << "hp: " << health << " hunger: " << -hunger << std::endl;
+        std::cout << "hp: " << health << " hunger: " << hunger << std::endl;
     }
+
+
 
     static void
     setPersonParams(int _basicAttack, int _basicRegen, int _pregnancyPerion, int _hungerPerAttack, int _hungerPerStep,

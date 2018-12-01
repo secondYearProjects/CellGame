@@ -119,11 +119,11 @@ void Tribe::manage() {
     log("%s", type.c_str());
     log("food %i", food);
     for (auto &person:people) {
-        if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
+        //if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
 
-            feed(person, 10);
-            person.stats();
-        }
+            feed(person, 5);
+
+        person.stats();
     }
     log("food %i", food);
     std::cout << std::endl;
@@ -223,17 +223,17 @@ CreatureActions Tribe::step() {
     updateHealth();
 
     // Fight & Breed
-    if (!field->getTile(x, y).tribes.empty()) {
-        for (int i = 0; i < field->getTile(x, y).tribes.size(); i++) {
-            auto &enemy = field->getTile(x, y).tribes[i];
-
-            if (enemy->getType() != this->getType()) {
-                actions.fight = true;
-                actions.fightDamage += enemy->getPower();
-                //log("fight");
-            }
-        }
-    }
+//    if (!field->getTile(x, y).tribes.empty()) {
+//        for (int i = 0; i < field->getTile(x, y).tribes.size(); i++) {
+//            auto &enemy = field->getTile(x, y).tribes[i];
+//
+//            if (enemy->getType() != this->getType()) {
+//                actions.fight = true;
+//                actions.fightDamage += enemy->getPower();
+//                //log("fight");
+//            }
+//        }
+//    }
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
@@ -244,7 +244,7 @@ CreatureActions Tribe::step() {
         return (person.health <= 0);
     }), people.end());
     updateHealth();
-    updateAttack();
+    //updateAttack();
     peopleLabel->setString(std::to_string(peopleCount()));
 
     // Custom manage function
