@@ -62,7 +62,7 @@ bool MainScene::init() {
 
 
     setField(Field::create());
-    field->createField(50);
+    field->createField(100);
     for (int i = 0; i < 8; i++) {
         if (Random::get<bool>())
             field->addTribe(Random::get(0, field->getN() - 1), Random::get(0, field->getN() - 1), "Meskwaki");
@@ -112,6 +112,9 @@ bool MainScene::init() {
     this->scheduleUpdate();
     this->schedule(schedule_selector(Field::gameStep), tickTime);
 
+    fieldStartX = field->getPositionX();
+    fieldStartY = field->getPositionY();
+
     return true;
 }
 
@@ -146,8 +149,8 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
             field->moveBy(Vec2(-10 * fieldScale, 0), time);
             break;
 
-//       case EventKeyboard::KeyCode::KEY_Q:
-//           field->moveTo(Vec2(0, 0), time);
+//        case EventKeyboard::KeyCode::KEY_Q:
+//            field->moveTo(Vec2(fieldStartX, fieldStartY), time);
 //            break;
 
         case EventKeyboard::KeyCode::KEY_EQUAL:

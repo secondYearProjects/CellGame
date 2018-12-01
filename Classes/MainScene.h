@@ -50,6 +50,9 @@ private:
     static Field *field;
     static float tickTime;
 
+    int fieldStartX;
+    int fieldStartY;
+
     static std::map<cocos2d::EventKeyboard::KeyCode,
             std::chrono::high_resolution_clock::time_point> keys;
 
@@ -62,8 +65,7 @@ private:
 
     static void setField(Field *_field) { field = _field; }
 
-    void updateTickSchedule()
-    {
+    void updateTickSchedule() {
         this->unscheduleUpdate();
         this->unschedule(schedule_selector(Field::gameStep));
         this->scheduleUpdate();

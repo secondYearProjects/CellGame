@@ -21,13 +21,83 @@ void terrainGenerator::Terrain::createTexture() {
 
     generateHeightMap();
 
+
+    // Only maps with n=chunkSize*a
+    int lineChunks = n / chunkSize;
+
+    cl::CImg<double> chunkCanvas((chunkSize * tileSize) * 2, (chunkSize * tileSize) * 2);
+    chunkCanvas.channels(0, 3);
+
+    smoothHeights(4);
+
+    // generate height map chunks
+    for (int chunkRow = 0; chunkRow < lineChunks; chunkRow++) {
+        for (int chunkCol = 0; chunkCol < lineChunks; chunkCol++) {
+
+            int iDraw = 0;
+            int chunkID = chunkRow + chunkCol * lineChunks;
+
+            for (int i = chunkRow * chunkSize; i < chunkRow * chunkSize + chunkSize; i++, iDraw++) {
+                int jDraw = 0;
+                for (int j = chunkCol * chunkSize; j < chunkCol * chunkSize + chunkSize; j++, jDraw++) {
+
+                    double height = terrainMap[i][n - j - 1].height;
+
+                    double heightColor[3] = {height * 255, height * 255, height * 255};
+                    chunkCanvas.draw_rectangle(iDraw * tileSize * 2, jDraw * tileSize * 2,
+                                               (iDraw + 1) * tileSize * 2, (jDraw + 1) * tileSize * 2,
+                                               heightColor);
+                }
+            }
+            chunkCanvas.save(("Resources/Chunks/HeightChunks/heightMap" + std::to_string(chunkID) + ".png").c_str());
+
+        }
+    }
+
+    // generate texture map chunks and apply height texture
+    for (int chunkRow = 0; chunkRow < lineChunks; chunkRow++) {
+        for (int chunkCol = 0; chunkCol < lineChunks; chunkCol++) {
+
+            int iDraw = 0;
+            int chunkID = chunkRow + chunkCol * lineChunks;
+
+            for (int i = chunkRow * chunkSize; i < chunkRow * chunkSize + chunkSize; i++, iDraw++) {
+                int jDraw = 0;
+                for (int j = chunkCol * chunkSize; j < chunkCol * chunkSize + chunkSize; j++, jDraw++) {
+
+                    double height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
+                    terrainMap[i][n - j - 1].height = height;
+                    TileType tileType = tileByHeight(height);
+                    terrainMap[i][n - j - 1].assign(i, j, tileType);
+
+                    chunkCanvas.draw_image(iDraw * tileSize * 2, jDraw * tileSize * 2, tiles[tileType]);
+
+//                    std::string heightPath =
+//                            "Resources/Chunks/HeightChunks/heightMap" + std::to_string(chunkID) + ".png";
+//
+//                    cl::CImg<unsigned char> heightFilter = loadTile(heightPath.c_str(),
+//                                                                    2 * tileSize * chunkSize,
+//                                                                    2 * tileSize * chunkSize);
+//
+//                    chunkCanvas.draw_image(0, 0, heightFilter, 0.1);
+                }
+            }
+
+
+            chunkCanvas.save(
+                    ("Resources/Chunks/TextureChunks/fieldTexture" + std::to_string(chunkID) + ".png").c_str());
+
+        }
+    }
+
+
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            smoothHeights(4);
 
-            terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
+
+            //terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
             TileType tileType = tileByHeight(terrainMap[i][n - j - 1].height);
-            terrainMap[i][n - j - 1].assign(i, j, tileType);
+            //terrainMap[i][n - j - 1].assign(i, j, tileType);
 
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
         }
@@ -106,9 +176,6 @@ void terrainGenerator::Terrain::removeCreature(int _x, int _y, Tribe *creature) 
 }
 
 void terrainGenerator::Terrain::generateHeightMap() {
-    cl::CImg<double> canvas((n * tileSize) * 2, (n * tileSize) * 2);
-    canvas.channels(0, 3);
-
     FastNoise perlin1(seed);
     perlin1.SetNoiseType(FastNoise::Perlin);
     perlin1.SetFractalOctaves(6);
@@ -139,12 +206,8 @@ void terrainGenerator::Terrain::generateHeightMap() {
             double heightColor[3] = {height * 255, height * 255, height * 255};
 
             terrainMap[i][n - j - 1].height = height;
-            canvas.draw_rectangle(i * tileSize * 2, j * tileSize * 2, i * tileSize * 4, j * tileSize * 4, heightColor);
-
         }
     }
-
-    canvas.save(heightMap);
 }
 
 terrainGenerator::TileType terrainGenerator::Terrain::tileByHeight(double height) {

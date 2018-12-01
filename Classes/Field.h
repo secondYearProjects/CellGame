@@ -11,6 +11,7 @@
 #include "random.h"
 
 #include <vector>
+#include <string>
 
 #define MAX_SCALE 5.0
 #define MIN_SCALE 0.05
@@ -29,6 +30,7 @@ public:
     //terrainGenerator::Terrain &getTerrain();
 
     void moveBy(cocos2d::Vec2 vec, float secs);
+
     void moveTo(cocos2d::Vec2 vec, float secs);
 
     void scaleBy(float duration, float scaleFactor);
@@ -52,11 +54,13 @@ private:
 
     ~Field() { delete terrain; }
 
-    int tileSize = 30;
+    int tileSize = 20;
     int n;
     float currentScale = 1.0;
     static terrainGenerator::Terrain *terrain;
     static std::vector<Tribe *> tribes;
+
+    static const int chunkSize = 10;
 
     static float AnimationSpeed;
 

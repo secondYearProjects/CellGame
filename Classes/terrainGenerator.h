@@ -90,6 +90,8 @@ namespace terrainGenerator {
         const unsigned char green[3] = {0, 255, 0};
         const unsigned char blue[3] = {0, 0, 255};
 
+        static const int chunkSize = 10;
+
         //std::vector<double> probability = {0.3, 0.5, 0.1, 0.1};
 
         std::vector<double> levels = {0.2, 0.4, 0.6, 1.0};

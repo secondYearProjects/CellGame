@@ -28,12 +28,37 @@ void Field::createField(int _n) {
 
     Field::setTerrain(newTerrain);
     Tribe::setParrentTerrain(newTerrain);
+    int lineChunks = n / chunkSize;
 
-    auto terrainImage = Sprite::create(terrain->getTextureName());
-    terrainImage->setAnchorPoint(Vec2(0, 0));
-    terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
-    terrainImage->setZOrder(-10);
-    this->addChild(terrainImage);
+    // TODO
+
+    int fieldX = this->getPositionX();
+    int fieldY = this->getPositionY();
+
+    int iPos = fieldY + (n - chunkSize) * tileSize;
+    for (int i = 0; i < lineChunks; i++) {
+        int jPos = 0;
+        for (int j = 0; j < lineChunks; j++) {
+            int chunkID = i + j * lineChunks;
+            auto chunk = Sprite::create(
+                    "Chunks/TextureChunks/fieldTexture" + std::to_string(chunkID) + ".png");
+
+            chunk->setAnchorPoint(Vec2(0, 0));
+            chunk->setScale(tileSize * chunkSize / chunk->getContentSize().width);
+            chunk->setPosition(jPos, iPos);
+
+            this->addChild(chunk);
+
+            jPos += tileSize * chunkSize;
+        }
+        iPos -= tileSize * chunkSize;
+    }
+
+//    auto terrainImage = Sprite::create(terrain->getTextureName());
+//    terrainImage->setAnchorPoint(Vec2(0, 0));
+//    terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
+//    terrainImage->setZOrder(-10);
+//    this->addChild(terrainImage);
 
 
 }
