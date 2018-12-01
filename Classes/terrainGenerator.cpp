@@ -23,6 +23,8 @@ void terrainGenerator::Terrain::createTexture() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
+            smoothHeights(4);
+
             terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
             TileType tileType = tileByHeight(terrainMap[i][n - j - 1].height);
             terrainMap[i][n - j - 1].assign(i, j, tileType);
@@ -30,6 +32,11 @@ void terrainGenerator::Terrain::createTexture() {
             canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
         }
     }
+    // height color filter
+    cl::CImg<unsigned char> heightFilter = loadTile(heightMap, 2 * tileSize * n, 2 * tileSize * n);
+
+    canvas.draw_image(0, 0, heightFilter, 0.1);
+
 
     canvas.save(texturePath);
 }
@@ -102,14 +109,27 @@ void terrainGenerator::Terrain::generateHeightMap() {
     cl::CImg<double> canvas((n * tileSize) * 2, (n * tileSize) * 2);
     canvas.channels(0, 3);
 
-    FastNoise perlin(seed);
-    perlin.SetNoiseType(FastNoise::Perlin);
-    perlin.SetFractalOctaves(6);
-    perlin.SetFrequency(0.3);
+    FastNoise perlin1(seed);
+    perlin1.SetNoiseType(FastNoise::Perlin);
+    perlin1.SetFractalOctaves(6);
+    perlin1.SetFrequency(0.3);
+
+    FastNoise perlin2(seed);
+    perlin2.SetNoiseType(FastNoise::Perlin);
+    perlin2.SetFractalOctaves(6);
+    perlin2.SetFrequency(0.4);
+
+    FastNoise perlin3(seed);
+    perlin3.SetNoiseType(FastNoise::Perlin);
+    perlin3.SetFractalOctaves(6);
+    perlin3.SetFrequency(0.6);
+
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            double height = perlin.GetNoise(i + 1, j + 1);
+            double height = 1 * perlin1.GetNoise(i + 2, j + 2) +
+                            0.5 * perlin2.GetNoise(i + 2, j + 2) +
+                            0.25 * perlin3.GetNoise(i + 2, j + 2);
 
             if (height > maxHeight)
                 maxHeight = height;
@@ -123,8 +143,6 @@ void terrainGenerator::Terrain::generateHeightMap() {
 
         }
     }
-    //canvas.draw_rectangle(0, 0, 10, 10, white);
-    //canvas.display(0, false, 0, true);
 
     canvas.save(heightMap);
 }
@@ -136,6 +154,14 @@ terrainGenerator::TileType terrainGenerator::Terrain::tileByHeight(double height
         }
     }
     return TileType::grass;
+}
+
+void terrainGenerator::Terrain::smoothHeights(double a) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            terrainMap[i][j].height = std::round(terrainMap[i][j].height * a) / a;
+        }
+    }
 }
 
 

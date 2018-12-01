@@ -105,6 +105,8 @@ namespace terrainGenerator {
 
         std::vector<std::vector<Tile> > terrainMap;
 
+        std::vector<std::vector<double> > bufferHeights;
+
         void createTexture();
 
         void greenscreen(cl::CImg<unsigned char> &img,
@@ -112,6 +114,8 @@ namespace terrainGenerator {
                          const unsigned char changeTo[3]);
 
         void generateHeightMap();
+
+        void smoothHeights(double a);
 
         cl::CImg<unsigned char> loadTile(const char *const tileTexture, int width, int heigt, bool replaceAlpha = true);
 

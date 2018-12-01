@@ -43,6 +43,7 @@ void Field::onEnter() {
 }
 
 void Field::moveBy(Vec2 vec, float secs) {
+
     runAction(MoveBy::create(secs, vec));
 
 }
