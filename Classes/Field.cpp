@@ -46,17 +46,13 @@ void Field::createField(int _n) {
             chunk->setPosition(jPos, iPos);
 
             this->addChild(chunk);
+            chunk->setGlobalZOrder(0);
 
             jPos += tileSize * chunkSize;
         }
         iPos -= tileSize * chunkSize;
     }
 
-//    auto terrainImage = Sprite::create(terrain->getTextureName());
-//    terrainImage->setAnchorPoint(Vec2(0, 0));
-//    terrainImage->setScale(_n * tileSize / terrainImage->getContentSize().width);
-//    terrainImage->setZOrder(-10);
-//    this->addChild(terrainImage);
 
 
 }
@@ -95,7 +91,7 @@ void Field::addTribe(int x, int y, const std::string &type) {
 
     newTribe->setScale(tileSize / newTribe->getContentSize().width);
     newTribe->setAnchorPoint(Vec2(0, 0));
-    newTribe->setZOrder(1);
+    newTribe->setGlobalZOrder(1);
 
     addChild(newTribe);
 

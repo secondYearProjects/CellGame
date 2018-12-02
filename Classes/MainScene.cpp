@@ -52,6 +52,7 @@ bool MainScene::init() {
     auto backGround = cocos2d::LayerColor::create(Color4B(255, 255, 255, 255));
 
     backGround->setPosition(Vec2(0, 0));
+    backGround->setGlobalZOrder(-10);
 
     Scene::addChild(backGround);
 
@@ -113,6 +114,26 @@ bool MainScene::init() {
     this->schedule(schedule_selector(Field::gameStep), tickTime);
 
     initButtons();
+
+    auto tribeInfoBox = cocos2d::Sprite::create("uiBox.png");
+    tribeInfoBox->setAnchorPoint(Vec2(0, 0));
+    tribeInfoBox->setScale(300 / tribeInfoBox->getContentSize().width,
+                           800 / tribeInfoBox->getContentSize().height);
+    tribeInfoBox->setPosition(Scene::getPositionX() + 800, Scene::getPositionY());
+    addChild(tribeInfoBox);
+    tribeInfoBox->setGlobalZOrder(10);
+
+
+
+    TribeInfoLabel = cocos2d::Label::createWithSystemFont("Tribdd da da jkd dddd ddddddd d d de Info: ", "Arial", 26);
+    TribeInfoLabel->setColor(Color3B::BLACK);
+    TribeInfoLabel->setAnchorPoint(Vec2(0, 1));
+    TribeInfoLabel->setWidth(180);
+    addChild(TribeInfoLabel);
+    TribeInfoLabel->setGlobalZOrder(11);
+    TribeInfoLabel->setPosition(
+            tribeInfoBox->getPositionX() + 10,
+            tribeInfoBox->getPositionY() + 690);
 
     fieldStartX = field->getPositionX();
     fieldStartY = field->getPositionY();
@@ -252,7 +273,7 @@ void MainScene::initButtons() {
     SpeedX2->setScale(buttonSize / SpeedX2->getContentSize().width);
     SpeedX3->setScale(buttonSize / SpeedX3->getContentSize().width);
 
-    float buttonX = this->getPositionX() + this->getContentSize().width;
+    float buttonX = this->getPositionX() + this->getContentSize().width-40;
     float buttonY = this->getPositionY() + 20;
 
     SpeedNormal->setPosition(Vec2(buttonX - buttonSize * 3, buttonY));
@@ -279,6 +300,10 @@ void MainScene::initButtons() {
     this->addChild(SpeedNormal);
     this->addChild(SpeedX2);
     this->addChild(SpeedX3);
+
+    SpeedNormal->setGlobalZOrder(20);
+    SpeedX2->setGlobalZOrder(20);
+    SpeedX3->setGlobalZOrder(20);
 }
 
 std::map<cocos2d::EventKeyboard::KeyCode,

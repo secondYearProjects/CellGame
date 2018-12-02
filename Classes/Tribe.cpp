@@ -66,6 +66,7 @@ Tribe::Tribe() {
     peopleLabel->setAlignment(TextHAlignment::CENTER);
     peopleLabel->setString(std::to_string(peopleCount()));
     addChild(peopleLabel);
+    peopleLabel->setLocalZOrder(2);
 
     std::cout << std::endl;
 }
