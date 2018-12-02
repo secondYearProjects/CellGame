@@ -108,56 +108,14 @@ bool MainScene::init() {
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
 
+    this->scheduleUpdate();
+    this->schedule(schedule_selector(Field::gameStep), tickTime);
 
-    auto SpeedNormal = cocos2d::ui::Button::create("normal-speed.png", "normal-speed-dis.png");
-    auto SpeedX2 = cocos2d::ui::Button::create("x2-speed.png", "x2-speed-dis.png");
-    auto SpeedX3 = cocos2d::ui::Button::create("x3-speed.png", "x3-speed-dis.png");
-
-
-    int buttonSize = 40;
-
-    SpeedNormal->setAnchorPoint(Vec2(0, 0));
-    SpeedX2->setAnchorPoint(Vec2(0, 0));
-    SpeedX3->setAnchorPoint(Vec2(0, 0));
-
-    SpeedNormal->setScale(buttonSize / SpeedNormal->getContentSize().width);
-    SpeedX2->setScale(buttonSize / SpeedX2->getContentSize().width);
-    SpeedX3->setScale(buttonSize / SpeedX3->getContentSize().width);
-
-    float buttonX = this->getPositionX() + this->getContentSize().width;
-    float buttonY = this->getPositionY() + 20;
-
-    SpeedNormal->setPosition(Vec2(buttonX - buttonSize * 3, buttonY));
-    SpeedX2->setPosition(Vec2(buttonX - buttonSize * 2, buttonY));
-    SpeedX3->setPosition(Vec2(buttonX - buttonSize * 1, buttonY));
-
-    SpeedNormal->setEnabled(true);
-    SpeedX2->setEnabled(false);
-    SpeedX3->setEnabled(false);
-
-
-    SpeedNormal->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
-        switch (type)
-        {
-            case ui::Widget::TouchEventType::BEGAN:
-                break;
-            case ui::Widget::TouchEventType::ENDED:
-                std::cout << "Button 1 clicked" << std::endl;
-                break;
-            default:
-                break;
-        }
-    });
+    initButtons();
 
     // TODO: here add speed change by buttons
 
-    this->addChild(SpeedNormal);
-    this->addChild(SpeedX2);
-    this->addChild(SpeedX3);
 
-
-    this->scheduleUpdate();
-    this->schedule(schedule_selector(Field::gameStep), tickTime);
 
     fieldStartX = field->getPositionX();
     fieldStartY = field->getPositionY();
@@ -169,6 +127,7 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
     float time = 0.2;
     float fieldScale = field->getScale();
     fieldScale = fieldScale > 1.0 ? fieldScale : 2.0f;
+
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
             field->moveBy(Vec2(0, -10 * fieldScale), time);
@@ -206,30 +165,31 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
         case EventKeyboard::KeyCode::KEY_MINUS:
             field->scaleBy(time, 0.6);
             break;
+
         case EventKeyboard::KeyCode::KEY_SPACE:
-            setTickTime(1000.0f);
+            setTickTime(10000.0f);
             updateTickSchedule();
+            setInactiveButtons();
             break;
         case EventKeyboard::KeyCode::KEY_1:
-            setTickTime(0.1f);
+            setTickTime(0.5f);
             updateTickSchedule();
+            setInactiveButtons();
+            SpeedNormal->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
             break;
         case EventKeyboard::KeyCode::KEY_2:
             setTickTime(0.3f);
             updateTickSchedule();
+            setInactiveButtons();
+            SpeedX2->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
             break;
         case EventKeyboard::KeyCode::KEY_3:
-            setTickTime(0.5f);
+            setTickTime(0.1f);
             updateTickSchedule();
+            setInactiveButtons();
+            SpeedX3->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
             break;
-        case EventKeyboard::KeyCode::KEY_4:
-            setTickTime(0.8f);
-            updateTickSchedule();
-            break;
-        case EventKeyboard::KeyCode::KEY_5:
-            setTickTime(1.0f);
-            updateTickSchedule();
-            break;
+
         case EventKeyboard::KeyCode::KEY_ESCAPE:
             Director::getInstance()->end();
         default:
@@ -278,3 +238,63 @@ std::map<cocos2d::EventKeyboard::KeyCode,
 float MainScene::tickTime = 0.1f;
 
 Field *MainScene::field = nullptr;
+
+void MainScene::setInactiveButtons() {
+    SpeedNormal->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
+    SpeedX2->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
+    SpeedX3->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
+}
+
+void MainScene::buttonChecker(float val, cocos2d::ui::Widget::TouchEventType type) {
+    setInactiveButtons();
+    switch (type) {
+        case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            break;
+        case cocos2d::ui::Widget::TouchEventType::ENDED:
+            setTickTime(val);
+            updateTickSchedule();
+            break;
+        default:
+            break;
+    }
+}
+
+void MainScene::initButtons() {
+    int buttonSize = 40;
+
+    SpeedNormal->setAnchorPoint(Vec2(0, 0));
+    SpeedX2->setAnchorPoint(Vec2(0, 0));
+    SpeedX3->setAnchorPoint(Vec2(0, 0));
+
+    SpeedNormal->setScale(buttonSize / SpeedNormal->getContentSize().width);
+    SpeedX2->setScale(buttonSize / SpeedX2->getContentSize().width);
+    SpeedX3->setScale(buttonSize / SpeedX3->getContentSize().width);
+
+    float buttonX = this->getPositionX() + this->getContentSize().width;
+    float buttonY = this->getPositionY() + 20;
+
+    SpeedNormal->setPosition(Vec2(buttonX - buttonSize * 3, buttonY));
+    SpeedX2->setPosition(Vec2(buttonX - buttonSize * 2, buttonY));
+    SpeedX3->setPosition(Vec2(buttonX - buttonSize * 1, buttonY));
+
+    SpeedNormal->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
+    SpeedX2->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
+    SpeedX3->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
+
+    SpeedNormal->addTouchEventListener([&](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        buttonChecker(0.5f, type);
+        SpeedNormal->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
+    });
+    SpeedX2->addTouchEventListener([&](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        buttonChecker(0.3f, type);
+        SpeedX2->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
+    });
+    SpeedX3->addTouchEventListener([&](Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        buttonChecker(0.1f, type);
+        SpeedX3->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(255, 255, 255)));
+    });
+
+    this->addChild(SpeedNormal);
+    this->addChild(SpeedX2);
+    this->addChild(SpeedX3);
+}
