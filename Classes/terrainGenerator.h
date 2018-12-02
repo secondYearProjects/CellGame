@@ -124,6 +124,8 @@ namespace terrainGenerator {
         const char *const getTexturePath(TileType tileType);
 
         TileType tileByHeight(double height);
+
+        void multiptyImages(cl::CImg<double> &A, cl::CImg<double> &mul, float coef);
     };
 }
 

@@ -13,8 +13,8 @@
 #include <vector>
 #include <string>
 
-#define MAX_SCALE 5.0
-#define MIN_SCALE 0.05
+#define MAX_SCALE 3.11
+#define MIN_SCALE 0.52
 
 
 class Field : public cocos2d::Node {

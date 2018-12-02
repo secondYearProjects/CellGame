@@ -288,7 +288,7 @@ int Tribe::startSpecialPoints = 10;
 
 int Tribe::walkLimit = 1;
 
-void Tribe:: feed(Person &person, std::size_t foodAmount) {
+void Tribe::feed(Person &person, std::size_t foodAmount) {
     if (food >= foodAmount) {
         person.eat(foodAmount);
         food -= foodAmount;

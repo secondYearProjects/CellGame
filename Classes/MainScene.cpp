@@ -55,9 +55,10 @@ bool MainScene::init() {
 
     Scene::addChild(backGround);
 
+    int n = 50;
 
     setField(Field::create());
-    field->createField(50);
+    field->createField(n);
 
     for (auto &creatureType:creatureTypes) {
         for (int i = 0; i < 8; i++) {
@@ -112,10 +113,6 @@ bool MainScene::init() {
     this->schedule(schedule_selector(Field::gameStep), tickTime);
 
     initButtons();
-
-    // TODO: here add speed change by buttons
-
-
 
     fieldStartX = field->getPositionX();
     fieldStartY = field->getPositionY();
@@ -214,8 +211,6 @@ void MainScene::update(float dt) {
 }
 
 bool MainScene::isKeyPressed(cocos2d::EventKeyboard::KeyCode code) {
-    // Check if the key is currently pressed by seeing it it's in the std::map keys
-    // In retrospect, keys is a terrible name for a key/value paried datatype isnt it?
     if (keys.find(code) != keys.end())
         return true;
     return false;
@@ -225,19 +220,6 @@ bool MainScene::isKeyPressed(cocos2d::EventKeyboard::KeyCode code) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 exit(0);
 #endif
-
-/*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() and exit(0) as given above,instead trigger a custom event created in RootViewController.mm as below*/
-
-//EventCustom customEndEvent("game_scene_close_event");
-//_eventDispatcher->dispatchEvent(&customEndEvent);
-
-
-std::map<cocos2d::EventKeyboard::KeyCode,
-        std::chrono::high_resolution_clock::time_point> MainScene::keys;
-
-float MainScene::tickTime = 0.1f;
-
-Field *MainScene::field = nullptr;
 
 void MainScene::setInactiveButtons() {
     SpeedNormal->runAction(cocos2d::TintTo::create(0, cocos2d::Color3B(200, 200, 200)));
@@ -298,3 +280,10 @@ void MainScene::initButtons() {
     this->addChild(SpeedX2);
     this->addChild(SpeedX3);
 }
+
+std::map<cocos2d::EventKeyboard::KeyCode,
+        std::chrono::high_resolution_clock::time_point> MainScene::keys;
+
+float MainScene::tickTime = 0.1f;
+
+Field *MainScene::field = nullptr;

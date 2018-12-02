@@ -129,6 +129,4 @@ private:
 };
 
 
-
-
 #endif //TEMPLATECPP_CREATURE_H

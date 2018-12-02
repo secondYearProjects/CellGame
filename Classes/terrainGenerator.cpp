@@ -6,8 +6,8 @@
 using Random = effolkronium::random_static;
 
 void terrainGenerator::Terrain::createTexture() {
-    cl::CImg<unsigned char> canvas((n * tileSize) * 2, (n * tileSize) * 2);
-    canvas.channels(0, 3);
+    //cl::CImg<unsigned char> canvas((n * tileSize) * 2, (n * tileSize) * 2);
+    //canvas.channels(0, 3);
 
     // load tile textures.
     std::vector<cl::CImg<unsigned char> > tiles = {
@@ -85,7 +85,15 @@ void terrainGenerator::Terrain::createTexture() {
 //                    chunkCanvas.draw_image(0, 0, heightFilter, 0.1);
                 }
             }
+            cl::CImg<double> heightFilter =
+                    loadTile(("Resources/Chunks/HeightChunks/heightMap" + std::to_string(chunkID) + ".png").c_str(),
+                             (chunkSize * tileSize) * 2, (chunkSize * tileSize) * 2);
 
+            heightFilter.channels(0, 3);
+            //heightFilter.blur_box(10.0f,10.0f,1.0f);
+
+            //chunkCanvas.draw_image(0, 0, heightFilter, 0.1);
+            //multiptyImages(chunkCanvas, heightFilter, 1.0f);
 
             chunkCanvas.save(
                     ("Resources/Chunks/TextureChunks/fieldTexture" + std::to_string(chunkID) + ".png").c_str());
@@ -94,24 +102,23 @@ void terrainGenerator::Terrain::createTexture() {
     }
 
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-
-
-            //terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
-            TileType tileType = tileByHeight(terrainMap[i][n - j - 1].height);
-            //terrainMap[i][n - j - 1].assign(i, j, tileType);
-
-            canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
-        }
-    }
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < n; j++) {
+//
+//
+//            //terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height, minHeight, maxHeight);
+//            TileType tileType = tileByHeight(terrainMap[i][n - j - 1].height);
+//            //terrainMap[i][n - j - 1].assign(i, j, tileType);
+//
+//            canvas.draw_image(i * tileSize * 2, j * tileSize * 2, tiles[tileType]);
+//        }
+//    }
 //    // height color filter
 //    cl::CImg<unsigned char> heightFilter = loadTile(heightMap, 2 * tileSize * n, 2 * tileSize * n);
 //
 //    canvas.draw_image(0, 0, heightFilter, 0.1);
-//
-//
-    canvas.save(texturePath);
+
+    //canvas.save(texturePath);
 }
 
 terrainGenerator::Terrain::Terrain(std::size_t _n, int _seed, size_t _tileSize) :
@@ -228,6 +235,19 @@ void terrainGenerator::Terrain::smoothHeights(double a) {
             terrainMap[i][j].height = std::round(terrainMap[i][j].height * a) / a;
         }
     }
+}
+
+void terrainGenerator::Terrain::multiptyImages(cimg_library::CImg<double> &A, cimg_library::CImg<double> &mul,
+                                               float coef) {
+    cimg_forXY(A, x, y) {
+            if (A(x, y, 0) != white[0] &&
+                A(x, y, 1) != white[1] &&
+                A(x, y, 2) != white[2]) {
+                for (int i = 0; i < 3; i++) {
+                    A(x, y, i) += mul(x, y, i) * coef;
+                }
+            }
+        }
 }
 
 
