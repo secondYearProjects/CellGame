@@ -53,8 +53,8 @@ Person::Person() {
 //    std::uniform_int_distribution<int> nameD(0, 5);
 
     const std::vector<std::string> names = {"Obuka", "Kiba", "Abba", "Uka", "Totto", "Dudu", "Fefe", "Doro", "Abekwa",
-                                            "Onu", "Abbiba", "Ubuntu", "Kali", "Shindows", "Debian", "Biba", "Boba",
-                                            "Sasuke", "Uzumaki"};
+                                            "Onu", "Abbiba", "Ubutu", "Kali", "Shindo", "Debia", "Biba", "Boba",
+                                            "Sasuke", "Uzumaki", "Dodo", "Uma", "Korol", "Abekwa", "Mita", "Mito"};
 
     male = Random::get<bool>();
     maxHealth = Random::get(100, 200);

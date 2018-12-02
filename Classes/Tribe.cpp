@@ -15,6 +15,22 @@ using Random = effolkronium::random_static;
 
 Tribe::Tribe() {
     people.reserve(startPeopleCount);
+
+    auto mouseEvent = EventListenerTouchOneByOne::create();
+    mouseEvent->onTouchBegan = [=](Touch *touch, Event *event) {
+        cocos2d::Vec2 p = touch->getLocation();
+        cocos2d::Rect rect = this->getBoundingBox();
+        if (rect.containsPoint(p)) {
+            // so you touched the Sprite, do something about it
+            log("touched %s", type.c_str());
+            return true;
+        }
+        return false;
+    };
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
+
+
     for (int i = 0; i < startPeopleCount; i++) {
         people.emplace_back(Person(startSpecialPoints));
     }
@@ -50,7 +66,6 @@ Tribe::Tribe() {
     peopleLabel->setAlignment(TextHAlignment::CENTER);
     peopleLabel->setString(std::to_string(peopleCount()));
     addChild(peopleLabel);
-
 
     std::cout << std::endl;
 }
@@ -91,7 +106,6 @@ Tribe *Tribe::createCreatureSprite(int _x, int _y, int _tileSize, int _n, std::s
 
         tribe->autorelease();
         tribe->setPosition(Vec2(_x * _tileSize, _y * _tileSize));
-
 
         return tribe;
     }

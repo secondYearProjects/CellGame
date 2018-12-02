@@ -80,7 +80,7 @@ bool MainScene::init() {
 
 
     auto eventListener = EventListenerKeyboard::create();
-    eventListener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event *event) {
+    eventListener->onKeyPressed = [&](EventKeyboard::KeyCode keyCode, Event *event) {
         // If a key already exists, do nothing as it will already have a time stamp
         // Otherwise, set's the timestamp to now
         if (keys.find(keyCode) == keys.end()) {
@@ -90,7 +90,7 @@ bool MainScene::init() {
 
     Director::getInstance()->getOpenGLView()->setIMEKeyboardState(true);
 
-    eventListener->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event *event) {
+    eventListener->onKeyReleased = [&](EventKeyboard::KeyCode keyCode, Event *event) {
         // remove the key.  std::map.erase() doesn't care if the key doesnt exist
         keys.erase(keyCode);
     };
@@ -99,7 +99,7 @@ bool MainScene::init() {
 
 
     auto mouseEvent = EventListenerMouse::create();
-    mouseEvent->onMouseScroll = [=](Event *event) {
+    mouseEvent->onMouseScroll = [&](Event *event) {
         EventMouse *e = (EventMouse *) event;
         if (e->getScrollY() > 0)
             field->scaleBy(0.2, 0.6);
