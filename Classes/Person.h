@@ -51,6 +51,8 @@ public:
         std::cout << "hp: " << health << " hunger: " << hunger << std::endl;
     }
 
+    std::string getInfoString(bool getSPECIAL = false);
+
     static int getMaxHunger() { return maxHunger; }
 
 

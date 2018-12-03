@@ -160,6 +160,21 @@ int Person::hungerPerStep = 20;
 int Person::stepsBeforBreed = 20;
 int Person::maxHunger = 100;
 
+std::string Person::getInfoString(bool getSPECIAL) {
+    std::string res = name + " (" + std::to_string(health) + "/" + std::to_string(maxHealth) + ") food: " +
+                      std::to_string(hunger);
+    if (getSPECIAL) {
+        res += "\n S:" + std::to_string(attributes.Strength) +
+               " P:" + std::to_string(attributes.Perception) +
+               " E:" + std::to_string(attributes.Endurance) +
+               " C:" + std::to_string(attributes.Charisma) +
+               " I:" + std::to_string(attributes.Intelligence) +
+               " A:" + std::to_string(attributes.Agility) +
+               " L:" + std::to_string(attributes.Luck);
+    }
+    return res;
+}
+
 
 
 

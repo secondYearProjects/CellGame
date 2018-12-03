@@ -74,11 +74,15 @@ public:
 
     int getTitleSize() const;
 
+    std::string getTribeInfoString(bool getSPECIAL = false);
+
     static void setTribeParams(int _startPeopleCount, int _startSpecialPoints, int _walkLimit) {
         Tribe::startPeopleCount = _startPeopleCount;
         Tribe::startSpecialPoints = _startSpecialPoints;
         Tribe::walkLimit = _walkLimit;
     }
+
+    static Tribe *selectedTribe;
 
 protected:
     void feed(Person &person, std::size_t foodAmount);
@@ -105,6 +109,8 @@ protected:
     static terrainGenerator::Terrain *field;
 
 private:
+    cocos2d::EventListenerTouchOneByOne *mouseEvent = cocos2d::EventListenerTouchOneByOne::create();
+
     cocos2d::Label *peopleLabel;
 
     Tribe();
@@ -126,6 +132,8 @@ private:
     void updateHealth();
 
     void updateAttack();
+
+    bool onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event);
 };
 
 

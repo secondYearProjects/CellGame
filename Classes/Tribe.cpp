@@ -16,17 +16,7 @@ using Random = effolkronium::random_static;
 Tribe::Tribe() {
     people.reserve(startPeopleCount);
 
-    auto mouseEvent = EventListenerTouchOneByOne::create();
-    mouseEvent->onTouchBegan = [=](Touch *touch, Event *event) {
-        cocos2d::Vec2 p = touch->getLocation();
-        cocos2d::Rect rect = this->getBoundingBox();
-        if (rect.containsPoint(p)) {
-            // so you touched the Sprite, do something about it
-            log("touched %s", type.c_str());
-            return true;
-        }
-        return false;
-    };
+    mouseEvent->onTouchBegan = CC_CALLBACK_2(Tribe::onTouchEvent, this);
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseEvent, this);
 
@@ -297,12 +287,6 @@ void Tribe::updateAttack() {
     attackPower = newAttack;
 }
 
-
-int Tribe::startPeopleCount = 5;
-int Tribe::startSpecialPoints = 10;
-
-int Tribe::walkLimit = 1;
-
 void Tribe::feed(Person &person, std::size_t foodAmount) {
     if (food >= foodAmount) {
         person.eat(foodAmount);
@@ -313,4 +297,45 @@ void Tribe::feed(Person &person, std::size_t foodAmount) {
     }
 }
 
+std::string Tribe::getTribeInfoString(bool getSPECIAL) {
+    std::string res;
+    for (auto &person:people) {
+        res += person.getInfoString(getSPECIAL) + "\n\n";
+    }
+    return res;
+}
 
+
+int Tribe::startPeopleCount = 5;
+int Tribe::startSpecialPoints = 10;
+
+int Tribe::walkLimit = 1;
+
+Tribe *Tribe::selectedTribe = nullptr;
+
+bool Tribe::onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event) {
+    auto TribeBox = this->getBoundingBox();
+    auto touchLocation = touch->getLocation();
+
+    auto par = getParent();
+
+    //cocos2d::log("%f %f", touch->getLocation().x, touch->getLocation().y);
+    //cocos2d::log("%f %f", TribeBox.getMinX(), TribeBox.getMinY());
+
+    if (TribeBox.containsPoint(Vec2(touchLocation.x - par->getPositionX(), touchLocation.y - par->getPositionY()))) {
+        cocos2d::EventCustom event("updateInfo");
+
+        char buf[500];
+        sprintf(buf, "%s", getTribeInfoString().c_str());
+
+        event.setUserData(buf);
+
+        _eventDispatcher->dispatchEvent(&event);
+
+        Tribe::selectedTribe = this;
+        //cocos2d::log("touched %s", type.c_str());
+        return true;
+    }
+    Tribe::selectedTribe = nullptr;
+    return false;
+}

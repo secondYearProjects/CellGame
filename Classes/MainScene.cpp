@@ -98,6 +98,12 @@ bool MainScene::init() {
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
 
+    auto TribeInfoUpdate = EventListenerCustom::create("updateInfo",[=](EventCustom *event){
+        TribeInfoLabel->setString(static_cast<char*>(event->getUserData()));
+    });////////here
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(TribeInfoUpdate, this);
+
 
     auto mouseEvent = EventListenerMouse::create();
     mouseEvent->onMouseScroll = [&](Event *event) {
@@ -124,8 +130,7 @@ bool MainScene::init() {
     tribeInfoBox->setGlobalZOrder(10);
 
 
-
-    TribeInfoLabel = cocos2d::Label::createWithSystemFont("Tribdd da da jkd dddd ddddddd d d de Info: ", "Arial", 26);
+    TribeInfoLabel = cocos2d::Label::createWithSystemFont("Tribe Info: ", "Arial", 22);
     TribeInfoLabel->setColor(Color3B::BLACK);
     TribeInfoLabel->setAnchorPoint(Vec2(0, 1));
     TribeInfoLabel->setWidth(180);
@@ -148,6 +153,7 @@ void MainScene::onWASD(cocos2d::EventKeyboard::KeyCode keyCode) {
 
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_W:
+
             field->moveBy(Vec2(0, -10 * fieldScale), time);
             break;
         case EventKeyboard::KeyCode::KEY_S:
@@ -273,7 +279,7 @@ void MainScene::initButtons() {
     SpeedX2->setScale(buttonSize / SpeedX2->getContentSize().width);
     SpeedX3->setScale(buttonSize / SpeedX3->getContentSize().width);
 
-    float buttonX = this->getPositionX() + this->getContentSize().width-40;
+    float buttonX = this->getPositionX() + this->getContentSize().width - 40;
     float buttonY = this->getPositionY() + 20;
 
     SpeedNormal->setPosition(Vec2(buttonX - buttonSize * 3, buttonY));
