@@ -125,6 +125,10 @@ void Field::gameStep(float dt) {
         return false;
     }), tribes.end());
 
+    cocos2d::EventCustom tickInfoUpdate("tickUpdate");
+
+    _eventDispatcher->dispatchEvent(&tickInfoUpdate);
+
 }
 
 

@@ -98,12 +98,20 @@ bool MainScene::init() {
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(eventListener, this);
 
-    auto TribeInfoUpdate = EventListenerCustom::create("updateInfo",[=](EventCustom *event){
-        TribeInfoLabel->setString(static_cast<char*>(event->getUserData()));
-    });////////here
+    auto TribeInfoUpdate = EventListenerCustom::create("updateInfo", [=](EventCustom *event) {
+        TribeInfoLabel->setString(static_cast<char *>(event->getUserData()));
+    });
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(TribeInfoUpdate, this);
 
+    auto TribeInfoTickUpdate = EventListenerCustom::create("tickUpdate", [=](EventCustom *event) {
+        if (Tribe::selectedTribe)
+            TribeInfoLabel->setString(Tribe::selectedTribe->getTribeInfoString());
+        else
+            TribeInfoLabel->setString("Tribe info:");
+    });
+
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(TribeInfoTickUpdate, this);
 
     auto mouseEvent = EventListenerMouse::create();
     mouseEvent->onMouseScroll = [&](Event *event) {

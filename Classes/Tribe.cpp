@@ -242,7 +242,7 @@ CreatureActions Tribe::step() {
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
-        food += people.size() * 3;
+        food += people.size() * 1;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person &person) {
@@ -298,7 +298,7 @@ void Tribe::feed(Person &person, std::size_t foodAmount) {
 }
 
 std::string Tribe::getTribeInfoString(bool getSPECIAL) {
-    std::string res;
+    std::string res = type + "\ntribe food: " + std::to_string(food) + "\n\n\n";
     for (auto &person:people) {
         res += person.getInfoString(getSPECIAL) + "\n\n";
     }
@@ -322,20 +322,21 @@ bool Tribe::onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event) {
     //cocos2d::log("%f %f", touch->getLocation().x, touch->getLocation().y);
     //cocos2d::log("%f %f", TribeBox.getMinX(), TribeBox.getMinY());
 
-    if (TribeBox.containsPoint(Vec2(touchLocation.x - par->getPositionX(), touchLocation.y - par->getPositionY()))) {
-        cocos2d::EventCustom event("updateInfo");
+    if (TribeBox.containsPoint(Vec2((1.0f / par->getScale()) * (touchLocation.x - par->getPositionX()),
+                                    (1.0f / par->getScale()) * (touchLocation.y - par->getPositionY())))) {
+        cocos2d::EventCustom eventUpd("updateInfo");
 
         char buf[500];
         sprintf(buf, "%s", getTribeInfoString().c_str());
 
-        event.setUserData(buf);
+        eventUpd.setUserData(buf);
 
-        _eventDispatcher->dispatchEvent(&event);
+        _eventDispatcher->dispatchEvent(&eventUpd);
 
         Tribe::selectedTribe = this;
         //cocos2d::log("touched %s", type.c_str());
         return true;
     }
-    Tribe::selectedTribe = nullptr;
+    //Tribe::selectedTribe = nullptr;
     return false;
 }
