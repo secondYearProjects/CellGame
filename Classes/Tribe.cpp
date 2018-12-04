@@ -59,6 +59,21 @@ Tribe::Tribe() {
     addChild(peopleLabel);
     peopleLabel->setGlobalZOrder(4);
 
+
+    //auto tsprt = cocos2d::Sprite::create("selection.png");
+
+    //addChild(tsprt);
+
+    selectionSprite = cocos2d::Sprite::create("selection.png");
+    //selectionSprite->setScale((tileSize + 40) / selectionSprite->getContentSize().width);
+    selectionSprite->setAnchorPoint(Vec2(0, 0));
+    selectionSprite->setPosition(Vec2(this->getPosition().x - 5, this->getPosition().y - 5));
+    //selectionSprite->setPosition(Vec2(-20, -20));
+
+    addChild(selectionSprite);
+
+    selectionSprite->runAction(cocos2d::Hide::create());
+
     std::cout << std::endl;
 }
 
@@ -128,10 +143,10 @@ void Tribe::manage() {
     for (auto &person:people) {
         //if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
         if (person.getHunger() <= 0)
-            feed(person, -person.getHunger()+8);
+            feed(person, -person.getHunger() + 8);
         else if (person.getHunger() < 10)
             feed(person, 4);
-       // person.stats();
+        // person.stats();
     }
     //log("food %i", food);
     //std::cout << std::endl;
@@ -145,6 +160,9 @@ void Tribe::manage() {
 }
 
 void Tribe::deathAnimation() {
+    if (Tribe::selectedTribe == this)
+        Tribe::selectedTribe = nullptr;
+
     setTexture("deadChar.png");
     peopleLabel->setString(std::to_string(peopleCount()));
     removeAllChildren();
@@ -336,6 +354,11 @@ bool Tribe::onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event) {
 
         _eventDispatcher->dispatchEvent(&eventUpd);
 
+        if (Tribe::selectedTribe)
+           Tribe::selectedTribe->hideSelection();
+
+        this->selectionSprite->runAction(cocos2d::Show::create());
+
         Tribe::selectedTribe = this;
         //cocos2d::log("touched %s", type.c_str());
         return true;
@@ -351,4 +374,9 @@ void Tribe::distributeDamage(int val) {
     for (auto &person:people) {
         person.recieveDamage(each);
     }
+}
+
+void Tribe::hideSelection() {
+    if (selectionSprite)
+        selectionSprite->runAction(cocos2d::Hide::create());
 }

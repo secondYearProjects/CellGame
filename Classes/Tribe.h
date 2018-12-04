@@ -86,6 +86,8 @@ public:
 
     void distributeDamage(int val);
 
+    void hideSelection();
+
 protected:
     void feed(Person &person, int foodAmount);
 
@@ -114,6 +116,8 @@ private:
     cocos2d::EventListenerTouchOneByOne *mouseEvent = cocos2d::EventListenerTouchOneByOne::create();
 
     cocos2d::Label *peopleLabel;
+
+    cocos2d::Sprite *selectionSprite;
 
     Tribe();
 
