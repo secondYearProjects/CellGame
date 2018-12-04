@@ -57,7 +57,7 @@ Tribe::Tribe() {
     peopleLabel->setAlignment(TextHAlignment::CENTER);
     peopleLabel->setString(std::to_string(peopleCount()));
     addChild(peopleLabel);
-    peopleLabel->setGlobalZOrder(4);
+    //peopleLabel->setGlobalZOrder(4);
 
 
     //auto tsprt = cocos2d::Sprite::create("selection.png");
@@ -73,6 +73,20 @@ Tribe::Tribe() {
     addChild(selectionSprite);
 
     selectionSprite->runAction(cocos2d::Hide::create());
+
+
+    fightSprite = cocos2d::Sprite::create("fight.png");
+
+    fightSprite->setAnchorPoint(Vec2(0,0));
+    fightSprite->setPosition(Vec2(this->getPosition().x - 10, this->getPosition().y - 10));
+    //fightSprite->setGlobalZOrder(1);
+    addChild(fightSprite);
+    fightSprite->runAction(cocos2d::Hide::create());
+
+    //fightSprite->setLocalZOrder(1);
+    //this->setGlobalZOrder(2);
+    peopleLabel->setGlobalZOrder(3);
+
 
     //std::cout << std::endl;
 }
@@ -165,11 +179,11 @@ void Tribe::deathAnimation() {
 
     setTexture("deadChar.png");
     peopleLabel->setString(std::to_string(peopleCount()));
-    removeAllChildren();
+    removeAllChildrenWithCleanup(true);
     field->removeCreature(x, y, this);
 
     auto fade = FadeOut::create(animationSpeed * 10.0f);
-    auto seq = Sequence::create(fade, [=] { this->removeFromParent(); }, nullptr);
+    auto seq = Sequence::create(fade, [=] { this->removeFromParentAndCleanup(true); }, nullptr);
     runAction(seq);
 }
 
@@ -248,19 +262,6 @@ CreatureActions Tribe::step() {
 
     updateHealth();
 
-    // Fight & Breed
-//    if (!field->getTile(x, y).tribes.empty()) {
-//        for (int i = 0; i < field->getTile(x, y).tribes.size(); i++) {
-//            auto &enemy = field->getTile(x, y).tribes[i];
-//
-//            if (enemy->getType() != this->getType()) {
-//                actions.fight = true;
-//                actions.fightDamage += enemy->getPower();
-//                //log("fight");
-//            }
-//        }
-//    }
-
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
         food += people.size() * 5;
@@ -281,8 +282,6 @@ CreatureActions Tribe::step() {
 
 float Tribe::animationSpeed = 0.1f;
 
-int Tribe::getPower() const { return attackPower; }
-
 terrainGenerator::Terrain *Tribe::field = nullptr;
 
 void Tribe::updateHealth() {
@@ -298,14 +297,15 @@ void Tribe::updateHealth() {
     changeHealthTo(newHealth);
 }
 
-void Tribe::updateAttack() {
+int Tribe::attack() {
     int newAttack = 0;
     for (auto &person:people) {
         if (person.health > 0) {
             newAttack += person.attack();
         }
     }
-    attackPower = newAttack;
+    //log("attack %i", newAttack);
+    return newAttack + peopleCount();
 }
 
 void Tribe::feed(Person &person, int foodAmount) {
@@ -345,23 +345,29 @@ bool Tribe::onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event) {
 
     if (TribeBox.containsPoint(Vec2((1.0f / par->getScale()) * (touchLocation.x - par->getPositionX()),
                                     (1.0f / par->getScale()) * (touchLocation.y - par->getPositionY())))) {
-        cocos2d::EventCustom eventUpd("updateInfo");
+        updateHealth();
+        if (health > 0) {
+            if (Tribe::selectedTribe)
+                if (Tribe::selectedTribe->getHealth() > 0)
+                    Tribe::selectedTribe->hideSelection();
+            if (selectionSprite)
+                this->selectionSprite->runAction(cocos2d::Show::create());
 
-        char buf[500];
-        sprintf(buf, "%s", getTribeInfoString().c_str());
 
-        eventUpd.setUserData(buf);
+            Tribe::selectedTribe = this;
 
-        _eventDispatcher->dispatchEvent(&eventUpd);
+            cocos2d::EventCustom eventUpd("updateInfo");
 
-        if (Tribe::selectedTribe)
-           Tribe::selectedTribe->hideSelection();
+            char buf[500];
+            sprintf(buf, "%s", getTribeInfoString().c_str());
 
-        this->selectionSprite->runAction(cocos2d::Show::create());
+            eventUpd.setUserData(buf);
 
-        Tribe::selectedTribe = this;
-        //cocos2d::log("touched %s", type.c_str());
-        return true;
+            _eventDispatcher->dispatchEvent(&eventUpd);
+
+
+            return true;
+        }
     }
     //Tribe::selectedTribe = nullptr;
     return false;
@@ -371,6 +377,7 @@ void Tribe::distributeDamage(int val) {
     int each = static_cast<int>(val / (people.size() + 1) + 1);
     if (val <= each)
         each = 1;
+    //log("get damage %i", each);
     for (auto &person:people) {
         person.recieveDamage(each);
     }
@@ -379,4 +386,54 @@ void Tribe::distributeDamage(int val) {
 void Tribe::hideSelection() {
     if (selectionSprite)
         selectionSprite->runAction(cocos2d::Hide::create());
+}
+
+CreatureActions Tribe::fightCheck() {
+    CreatureActions actions;
+    actions.breed = false;
+    actions.fight = false;
+    actions.fightDamage = 0;
+
+
+    // Fight & Breed
+    if (!field->getTile(x, y).tribes.empty()) {
+        for (int i = 0; i < field->getTile(x, y).tribes.size(); i++) {
+            auto &enemy = field->getTile(x, y).tribes[i];
+
+            if (enemy->getType() != this->getType()) {
+                actions.fight = true;
+                actions.fightWith.push_back(enemy);
+
+                //log("fight");
+            }
+        }
+    }
+
+    return actions;
+}
+
+int Tribe::getFood() const { return food; }
+
+void Tribe::addFood(int val) { food += val; }
+
+int Tribe::cannibalValue() {
+    int res = 0;
+    res += food;
+    for (auto &person:people) {
+        if (person.hunger > 0)
+            res += person.hunger;
+        res += static_cast<int>(maxHealth * 0.1);
+    }
+    res += Random::get(10,30);
+    return res;
+}
+
+void Tribe::fightAnimation() {
+    auto show = cocos2d::Show::create();
+    auto fadeIn = cocos2d::FadeIn::create(animationSpeed);
+    auto fadeOut = cocos2d::FadeOut::create(animationSpeed);
+    auto hide = cocos2d::Hide::create();
+    auto seq = cocos2d::Sequence::create(show, fadeIn, fadeOut, hide,
+                                         nullptr);
+    fightSprite->runAction(seq);
 }

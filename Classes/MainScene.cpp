@@ -56,7 +56,7 @@ bool MainScene::init() {
 
     Scene::addChild(backGround);
 
-    int n = 50;
+    int n = 20;
 
     setField(Field::create());
     field->createField(n);

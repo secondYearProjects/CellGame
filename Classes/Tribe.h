@@ -13,14 +13,17 @@
 #include "random.h"
 
 #include <memory>
-
+#include <vector>
 
 class Field;
+
+class Tribe;
 
 struct CreatureActions {
     bool breed = false;
     bool fight = false;
     int fightDamage = 0;
+    std::vector<Tribe *> fightWith;
 };
 
 class Tribe : public cocos2d::Sprite {
@@ -50,6 +53,8 @@ public:
 
     CreatureActions step();
 
+    CreatureActions fightCheck();
+
     void walk(int _x, int _y);
 
     static void setAnimationSpeed(float speed) { Tribe::animationSpeed = speed; }
@@ -66,7 +71,9 @@ public:
 
     int getHealth() const;
 
-    int getPower() const;
+    int getFood() const;
+
+    void addFood(int val);
 
     int peopleCount() const { return people.size(); }
 
@@ -87,6 +94,14 @@ public:
     void distributeDamage(int val);
 
     void hideSelection();
+
+    int attack();
+
+    void updateHealth();
+
+    int cannibalValue();
+
+    void fightAnimation();
 
 protected:
     void feed(Person &person, int foodAmount);
@@ -118,6 +133,7 @@ private:
     cocos2d::Label *peopleLabel;
 
     cocos2d::Sprite *selectionSprite;
+    cocos2d::Sprite *fightSprite;
 
     Tribe();
 
@@ -134,10 +150,6 @@ private:
     void setTileSize(int _tileSize);
 
     bool stepAvailable(int _x, int _y);
-
-    void updateHealth();
-
-    void updateAttack();
 
     bool onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event);
 };

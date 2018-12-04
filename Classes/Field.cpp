@@ -114,17 +114,41 @@ void Field::gameStep(float dt) {
         return false;
     }), tribes.end());
 
-    for (auto &tribe : tribes) {
 
+    for (auto &tribe : tribes) {
         CreatureActions action = tribe->step();
+        //log("recieve %i food", tribe->cannibalValue());
+    }
+
+    // FIGHTS CHECK
+    std::vector<std::pair<Tribe *, std::vector<Tribe *> > > fights;
+    for (auto &tribe:tribes) {
+        CreatureActions action = tribe->fightCheck();
         if (action.fight) {
-            //tribe->changeHealthBy(-action.fightDamage);
-            // TODO: fight damage distributor
+            fights.emplace_back(tribe, action.fightWith);
+        }
+    }
+    // RUN FIGHTS
+    for (auto &fightPair:fights) {
+        Tribe *fighter = fightPair.first;
+
+
+        fighter->fightAnimation();
+
+        for (auto &aim:fightPair.second) {
+            aim->distributeDamage(fighter->attack());
+            aim->updateHealth();
+            //log("fight");
+            if (aim->getHealth() <= 0) {
+                log("death from fight! recieve %i food", aim->cannibalValue());
+                fighter->addFood(aim->cannibalValue());
+            }
         }
     }
 
     tribes.erase(std::remove_if(tribes.begin(), tribes.end(), [=](Tribe *tribe) {
-        if (tribe->peopleCount() == 0) {
+        tribe->updateHealth();
+        if (tribe->getHealth() <= 0) {
             tribe->deathAnimation();
             return true;
         }
