@@ -140,8 +140,9 @@ void Field::gameStep(float dt) {
             aim->updateHealth();
             //log("fight");
             if (aim->getHealth() <= 0) {
-                log("death from fight! recieve %i food", aim->cannibalValue());
-                fighter->addFood(aim->cannibalValue());
+                int reward = aim->cannibalValue();
+                log("death from fight! recieve %i food", reward);
+                fighter->addFood(reward);
             }
         }
     }

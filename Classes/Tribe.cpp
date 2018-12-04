@@ -431,7 +431,7 @@ int Tribe::cannibalValue() {
 void Tribe::fightAnimation() {
     auto show = cocos2d::Show::create();
     auto fadeIn = cocos2d::FadeIn::create(animationSpeed);
-    auto fadeOut = cocos2d::FadeOut::create(animationSpeed);
+    auto fadeOut = cocos2d::FadeOut::create(animationSpeed*2.0f);
     auto hide = cocos2d::Hide::create();
     auto seq = cocos2d::Sequence::create(show, fadeIn, fadeOut, hide,
                                          nullptr);

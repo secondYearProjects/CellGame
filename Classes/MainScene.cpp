@@ -56,13 +56,13 @@ bool MainScene::init() {
 
     Scene::addChild(backGround);
 
-    int n = 20;
+    int n = 50;
 
     setField(Field::create());
     field->createField(n);
 
     for (auto &creatureType:creatureTypes) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 16; i++) {
             for (int tryCount = 0; tryCount < 100; tryCount++) {
                 int xSpawn = Random::get(0, field->getN() - 1);
                 int ySpawn = Random::get(0, field->getN() - 1);
