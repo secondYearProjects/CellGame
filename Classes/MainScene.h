@@ -64,6 +64,7 @@ private:
     cocos2d::ui::Button *SpeedX3 = cocos2d::ui::Button::create("x3-speed.png", "x3-speed-dis.png");
 
     cocos2d::Label *TribeInfoLabel;
+    std::map<std::string, cocos2d::Label *> FactionScores;
 
     static std::map<cocos2d::EventKeyboard::KeyCode,
             std::chrono::high_resolution_clock::time_point> keys;

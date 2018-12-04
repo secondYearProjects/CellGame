@@ -105,6 +105,13 @@ bool MainScene::init() {
     _eventDispatcher->addEventListenerWithSceneGraphPriority(TribeInfoUpdate, this);
 
     auto TribeInfoTickUpdate = EventListenerCustom::create("tickUpdate", [=](EventCustom *event) {
+        //factions
+        std::map<std::string, std::string> review = field->getFactionsReview();
+        for (auto &type:creatureTypes) {
+            FactionScores[type]->setString(type + ": " + review[type]);
+        }
+
+        //selection
         if (Tribe::selectedTribe)
             TribeInfoLabel->setString(Tribe::selectedTribe->getTribeInfoString());
         else
@@ -138,7 +145,7 @@ bool MainScene::init() {
     tribeInfoBox->setGlobalZOrder(10);
 
 
-    TribeInfoLabel = cocos2d::Label::createWithSystemFont("Tribe Info: ", "Arial", 22);
+    TribeInfoLabel = cocos2d::Label::createWithSystemFont("Tribe Info: ", "Arial", 18);
     TribeInfoLabel->setColor(Color3B::BLACK);
     TribeInfoLabel->setAnchorPoint(Vec2(0, 1));
     TribeInfoLabel->setWidth(180);
@@ -146,7 +153,40 @@ bool MainScene::init() {
     TribeInfoLabel->setGlobalZOrder(11);
     TribeInfoLabel->setPosition(
             tribeInfoBox->getPositionX() + 10,
-            tribeInfoBox->getPositionY() + 690);
+            tribeInfoBox->getPositionY() + 600);
+
+
+    auto factionGroup = cocos2d::Layer::create();
+    int factionIndex = 0;
+    int factionOffset = 40;
+    for (auto &faction:creatureTypes) {
+        auto tmpLabel = cocos2d::Label::createWithSystemFont(faction, "Arial", 18);
+
+        if (faction == "Player")
+            tmpLabel->setColor(Color3B::RED);
+        else if (faction == "Obunga")
+            tmpLabel->setColor(Color3B::BLUE);
+        else if (faction == "Meskwaki")
+            tmpLabel->setColor(Color3B(0,200,0));
+
+        tmpLabel->setAnchorPoint(Vec2(0, 1));
+        tmpLabel->setWidth(180);
+
+        FactionScores[faction] = tmpLabel;
+        factionGroup->addChild(tmpLabel);
+
+        tmpLabel->setGlobalZOrder(11);
+
+        tmpLabel->runAction(MoveBy::create(0, Vec2(0, -factionIndex * factionOffset)));
+
+        factionIndex++;
+    }
+
+    factionGroup->setPosition(
+            tribeInfoBox->getPositionX() + 10,
+            tribeInfoBox->getPositionY() + 780);
+
+    addChild(factionGroup);
 
     fieldStartX = field->getPositionX();
     fieldStartY = field->getPositionY();

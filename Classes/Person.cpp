@@ -57,7 +57,7 @@ Person::Person() {
                                             "Sasuke", "Uzumaki", "Dodo", "Uma", "Korol", "Abekwa", "Mita", "Mito"};
 
     male = Random::get<bool>();
-    maxHealth = Random::get(100, 200);
+    maxHealth = 100;
     health = maxHealth;
     name = names[Random::get<std::size_t>(0, names.size() - 1)];
 
@@ -79,6 +79,9 @@ Person::Person(int specialPoints) : Person() {
         increaseAttribute(attributes, Random::get(0, 6), 1);
         specialPoints--;
     }
+
+    maxHealth += 10 * attributes.Strength;
+    health = maxHealth;
 }
 
 int Person::attack() {

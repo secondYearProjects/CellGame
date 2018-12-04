@@ -54,7 +54,6 @@ void Field::createField(int _n) {
     }
 
 
-
 }
 
 void Field::onEnter() {
@@ -154,3 +153,19 @@ std::vector<Tribe *> Field::tribes;
 terrainGenerator::Terrain *Field::terrain = nullptr;
 
 float Field::AnimationSpeed = 0.1f;
+
+std::map<std::string, std::string> Field::getFactionsReview() {
+    std::map<std::string, std::string> review;
+
+    std::map<std::string, int> peopleCount;
+
+    for (auto &tribe:tribes) {
+        peopleCount[tribe->getType()] += tribe->peopleCount();
+    }
+
+    for (auto &type:creatureTypes) {
+        review[type] = std::to_string(peopleCount[type]);
+    }
+
+    return review;
+}

@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #define MAX_SCALE 3.11
 #define MIN_SCALE 0.52
@@ -50,7 +51,11 @@ public:
 
     int getN() const { return n; }
 
+    std::map<std::string, std::string> getFactionsReview();
+
 private:
+
+    std::vector<std::string> creatureTypes = {"Player", "Obunga", "Meskwaki"};
 
     Field();
 
