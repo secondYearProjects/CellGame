@@ -43,7 +43,7 @@ public:
 
     int attack();
 
-    void eat(std::size_t foodAmount);
+    void eat(int foodAmount);
 
     int getHunger() const;
 

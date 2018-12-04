@@ -114,7 +114,7 @@ int Person::calculateAttack() {
     return static_cast<int>(damage);
 }
 
-void Person::eat(std::size_t foodAmount) {
+void Person::eat(int foodAmount) {
     if (hunger + foodAmount > maxHunger)
         hunger = maxHunger;
     else
@@ -127,9 +127,14 @@ void Person::recieveDamage(int val) { health -= val; }
 void Person::step() {
     this->hunger -= static_cast<int>(hungerPerStep *
                                      (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+    //double hch = -static_cast<int>(hungerPerStep *
+    //                              (1.1f - static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute));
+    //std::cout << hch << "\n";
     if (this->hunger < 0) {
         //health -= 3;
         health -= static_cast<int>(10 * static_cast<float >(attributes.Endurance) / SPECIAL::maxAttribute);
+        if (hunger < -maxHunger)
+            hunger = -maxHunger;
         //std::cout << "--hp " << health << " hunger " << hunger << std::endl;
     } else {
 
@@ -156,7 +161,7 @@ int Person::basicAttack = 1;
 int Person::basicRegen = 1;
 int Person::pregnancyPerion = 10;
 int Person::hungerPerAttack = 5;
-int Person::hungerPerStep = 20;
+int Person::hungerPerStep = 4;
 int Person::stepsBeforBreed = 20;
 int Person::maxHunger = 100;
 

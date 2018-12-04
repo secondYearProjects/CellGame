@@ -84,8 +84,10 @@ public:
 
     static Tribe *selectedTribe;
 
+    void distributeDamage(int val);
+
 protected:
-    void feed(Person &person, std::size_t foodAmount);
+    void feed(Person &person, int foodAmount);
 
     int x, y;
     int tileSize;

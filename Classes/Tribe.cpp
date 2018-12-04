@@ -39,6 +39,7 @@ Tribe::Tribe() {
 
     updateHealth();
 
+    /*
     for (auto person:people) {
         std::cout << person.name << ": "
                   << person.attributes.Strength << " "
@@ -48,7 +49,7 @@ Tribe::Tribe() {
                   << person.attributes.Intelligence << " "
                   << person.attributes.Agility << " "
                   << person.attributes.Luck << "\n";
-    }
+    }*/
 
     peopleLabel = cocos2d::Label::createWithSystemFont("5", "Arial", 24);
     peopleLabel->setTextColor(cocos2d::Color4B(20, 20, 20, 255));
@@ -56,7 +57,7 @@ Tribe::Tribe() {
     peopleLabel->setAlignment(TextHAlignment::CENTER);
     peopleLabel->setString(std::to_string(peopleCount()));
     addChild(peopleLabel);
-    peopleLabel->setLocalZOrder(2);
+    peopleLabel->setGlobalZOrder(4);
 
     std::cout << std::endl;
 }
@@ -122,16 +123,18 @@ void Tribe::walk(int _x, int _y) {
 }
 
 void Tribe::manage() {
-    log("%s", type.c_str());
-    log("food %i", food);
+    //log("%s", type.c_str());
+    //log("food %i", food);
     for (auto &person:people) {
         //if (person.hunger < 0 || person.hunger < Person::hungerPerStep + 2) {
-        if (person.getHunger() < 10)
-            feed(person, 5);
-        person.stats();
+        if (person.getHunger() <= 0)
+            feed(person, -person.getHunger()+8);
+        else if (person.getHunger() < 10)
+            feed(person, 4);
+       // person.stats();
     }
-    log("food %i", food);
-    std::cout << std::endl;
+    //log("food %i", food);
+    //std::cout << std::endl;
     //if (field->getTile(x, y).type == terrainGenerator::TileType::grass)
     //    return;
 
@@ -242,7 +245,7 @@ CreatureActions Tribe::step() {
 
     // Food check
     if (field->getTile(x, y).type == terrainGenerator::TileType::grass) {
-        food += people.size() * 1;
+        food += people.size() * 5;
     }
 
     people.erase(std::remove_if(people.begin(), people.end(), [=](Person &person) {
@@ -287,7 +290,7 @@ void Tribe::updateAttack() {
     attackPower = newAttack;
 }
 
-void Tribe::feed(Person &person, std::size_t foodAmount) {
+void Tribe::feed(Person &person, int foodAmount) {
     if (food >= foodAmount) {
         person.eat(foodAmount);
         food -= foodAmount;
@@ -339,4 +342,13 @@ bool Tribe::onTouchEvent(cocos2d::Touch *touch, cocos2d::Event *event) {
     }
     //Tribe::selectedTribe = nullptr;
     return false;
+}
+
+void Tribe::distributeDamage(int val) {
+    int each = static_cast<int>(val / (people.size() + 1) + 1);
+    if (val <= each)
+        each = 1;
+    for (auto &person:people) {
+        person.recieveDamage(each);
+    }
 }
