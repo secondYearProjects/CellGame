@@ -74,7 +74,7 @@ Tribe::Tribe() {
 
     selectionSprite->runAction(cocos2d::Hide::create());
 
-    std::cout << std::endl;
+    //std::cout << std::endl;
 }
 
 bool Tribe::init() {
