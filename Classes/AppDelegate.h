@@ -27,6 +27,8 @@
 
 #include "cocos2d.h"
 
+#include <thread>
+
 /**
 @brief    The cocos2d Application.
 

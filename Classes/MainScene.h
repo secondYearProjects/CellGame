@@ -34,6 +34,7 @@
 //#include "ui/CocosGUI.h"
 
 #include <map>
+#include <thread>
 
 class MainScene : public cocos2d::Scene {
 public:

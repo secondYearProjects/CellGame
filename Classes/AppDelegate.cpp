@@ -115,11 +115,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
-    // create a scene. it's an autorelease object
-    auto scene = MainScene::createScene();
+    auto loadScene = cocos2d::Scene::create();
+    director->runWithScene(loadScene);
 
-    // run
-    director->runWithScene(scene);
+    auto mainScene = MainScene::createScene();
+    director->getInstance()->replaceScene(mainScene);
+
 
     return true;
 }

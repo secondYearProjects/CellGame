@@ -24,7 +24,14 @@ bool Field::init() {
 void Field::createField(int _n) {
     this->n = _n;
 
-    terrainGenerator::Terrain *newTerrain = new terrainGenerator::Terrain(n, Random::get(0, 2000), tileSize);
+    terrainGenerator::Terrain *newTerrain = nullptr;
+
+    std::thread generationThread([&]() {
+        newTerrain = new terrainGenerator::Terrain(n, Random::get(0, 2000), tileSize);
+    });
+
+    if (generationThread.joinable())
+        generationThread.join();
 
     Field::setTerrain(newTerrain);
     Tribe::setParrentTerrain(newTerrain);

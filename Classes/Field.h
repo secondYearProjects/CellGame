@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <thread>
 
 #define MAX_SCALE 3.11
 #define MIN_SCALE 0.52

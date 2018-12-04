@@ -19,8 +19,8 @@ void terrainGenerator::Terrain::createTexture() {
 
     //canvas.draw_fill(0, 0, white);
 
-    generateHeightMap();
-
+    std::thread mapGenThread([&]() { this->generateHeightMap(); });
+    mapGenThread.join();
 
     // Only maps with n=chunkSize*a
     int lineChunks = n / chunkSize;
