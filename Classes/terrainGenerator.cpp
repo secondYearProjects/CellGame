@@ -47,7 +47,7 @@ void terrainGenerator::Terrain::createTexture() {
                     //                                                  minHeight,
                     //                                                  maxHeight);
 
-                    double height = terrainMap[i][n - j - 1].height;
+                    double height = bufferHeights[i][n - j - 1];
 
                     double heightColor[3] = {height * 255, height * 255, height * 255};
                     chunkCanvas.draw_rectangle(iDraw * tileSize * 2, jDraw * tileSize * 2,
@@ -95,8 +95,8 @@ void terrainGenerator::Terrain::createTexture() {
             heightFilter.channels(0, 3);
             //heightFilter.blur_box(10.0f,10.0f,1.0f);
 
-            //chunkCanvas.draw_image(0, 0, heightFilter, 0.1);
-            //multiptyImages(chunkCanvas, heightFilter, 1.0f);
+            //chunkCanvas.draw_image(0, 0, heightFilter, 1.0);
+            multiptyImages(chunkCanvas, heightFilter, 1.0f);
 
             chunkCanvas.save(
                     ("Resources/Chunks/TextureChunks/fieldTexture" + std::to_string(chunkID) + ".png").c_str());
@@ -243,11 +243,30 @@ terrainGenerator::TileType terrainGenerator::Terrain::tileByHeight(double height
 void terrainGenerator::Terrain::multiptyImages(cimg_library::CImg<double> &A, cimg_library::CImg<double> &mul,
                                                float coef) {
     cimg_forXY(A, x, y) {
-            if (A(x, y, 0) != white[0] &&
-                A(x, y, 1) != white[1] &&
+            if (A(x, y, 0) != white[0] ||
+                A(x, y, 1) != white[1] ||
                 A(x, y, 2) != white[2]) {
                 for (int i = 0; i < 3; i++) {
-                    A(x, y, i) += mul(x, y, i) * coef;
+                    auto aColor = A(x, y, i);
+                    auto mulColor = mul(x, y, 0);
+                    auto type = tileByHeight(mulColor / 255.0);
+
+                    double res;
+                    switch (type) {
+                        case TileType::grass:
+                            res = aColor * (0.25 + (mulColor / 255.0) * coef);
+                            break;
+                        case TileType::water:
+                            res = aColor * (0.9 + (mulColor / 255.0) * coef);
+                            break;
+                        case TileType::sand:
+                            res = aColor * (0.8 + (mulColor / 255.0) * coef);
+                            break;
+                        case TileType::dirt:
+                            res = aColor * (0.6 + (mulColor / 255.0) * coef);
+                            break;
+                    }
+                    A(x, y, i) = (res <= 255.0) ? (res) : 255.0;
                 }
             }
         }
