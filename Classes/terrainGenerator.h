@@ -12,6 +12,7 @@
 #include "random.h"
 #include "FastNoise.h"
 
+
 #include <string>
 #include <vector>
 #include <random>
@@ -126,6 +127,8 @@ namespace terrainGenerator {
         TileType tileByHeight(double height);
 
         void multiptyImages(cl::CImg<double> &A, cl::CImg<double> &mul, float coef);
+
+        void smoothFromBuffer();
     };
 }
 

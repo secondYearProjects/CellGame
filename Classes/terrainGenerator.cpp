@@ -30,6 +30,8 @@ void terrainGenerator::Terrain::createTexture() {
 
     //smoothHeights(4);
 
+    smoothFromBuffer();
+
     // generate height map chunks
     for (int chunkRow = 0; chunkRow < lineChunks; chunkRow++) {
         for (int chunkCol = 0; chunkCol < lineChunks; chunkCol++) {
@@ -41,9 +43,10 @@ void terrainGenerator::Terrain::createTexture() {
                 int jDraw = 0;
                 for (int j = chunkCol * chunkSize; j < chunkCol * chunkSize + chunkSize; j++, jDraw++) {
 
-                    terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height,
-                                                                      minHeight,
-                                                                      maxHeight);
+                    //terrainMap[i][n - j - 1].height = linearNormalize(terrainMap[i][n - j - 1].height,
+                    //                                                  minHeight,
+                    //                                                  maxHeight);
+
                     double height = terrainMap[i][n - j - 1].height;
 
                     double heightColor[3] = {height * 255, height * 255, height * 255};
@@ -124,7 +127,7 @@ void terrainGenerator::Terrain::createTexture() {
 terrainGenerator::Terrain::Terrain(std::size_t _n, int _seed, size_t _tileSize) :
         n(_n), seed(_seed), tileSize(_tileSize) {
     terrainMap = std::vector<std::vector<Tile> >(_n, std::vector<Tile>(_n));
-
+    bufferHeights = std::vector<std::vector<double> >(_n, std::vector<double>(_n));
     createTexture();
 }
 
@@ -215,7 +218,7 @@ void terrainGenerator::Terrain::generateHeightMap() {
 
             double heightColor[3] = {height * 255, height * 255, height * 255};
 
-            terrainMap[i][n - j - 1].height = height;
+            bufferHeights[i][n - j - 1] = height;
         }
     }
 }
@@ -229,13 +232,13 @@ terrainGenerator::TileType terrainGenerator::Terrain::tileByHeight(double height
     return TileType::grass;
 }
 
-void terrainGenerator::Terrain::smoothHeights(double a) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            terrainMap[i][j].height = std::round(terrainMap[i][j].height * a) / a;
-        }
-    }
-}
+//void terrainGenerator::Terrain::smoothHeights(double a) {
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < n; j++) {
+//            terrainMap[i][j].height = std::round(terrainMap[i][j].height * a) / a;
+//        }
+//    }
+//}
 
 void terrainGenerator::Terrain::multiptyImages(cimg_library::CImg<double> &A, cimg_library::CImg<double> &mul,
                                                float coef) {
@@ -248,6 +251,38 @@ void terrainGenerator::Terrain::multiptyImages(cimg_library::CImg<double> &A, ci
                 }
             }
         }
+}
+
+void terrainGenerator::Terrain::smoothFromBuffer() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == 0 || j == 0 || i == n - 1 || j == n - 1)
+                bufferHeights[i][j] = 0.0;
+            else
+                bufferHeights[i][j] = linearNormalize(bufferHeights[i][j],
+                                                      minHeight,
+                                                      maxHeight);
+        }
+    }
+
+    for (int i = 1; i < n - 1; i++) {
+        for (int j = 1; j < n - 1; j++) {
+            // median in i j pos
+            double median = 0.0;
+            for (int mI = i - 1; mI <= i + 1; mI++)
+                for (int mJ = j - 1; mJ <= j + 1; mJ++)
+                    median += bufferHeights[mI][mJ];
+            median = median / 9.0;
+
+            terrainMap[i][j].height = median;
+        }
+    }
+
+    for (int i = 1; i < n - 1; i++) {
+        for (int j = 1; j < n - 1; j++) {
+            bufferHeights[i][j] = terrainMap[i][j].height;
+        }
+    }
 }
 
 
