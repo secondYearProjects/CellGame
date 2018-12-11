@@ -11,7 +11,7 @@
 ```
 ./download-deps.sh
 ```
-3) to run game use from directory where you have unpacked archive
+3) to run game use next command from directory where you have unpacked archive
 ```
 ./CellGame
 ```
