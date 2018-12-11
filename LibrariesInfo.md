@@ -1,6 +1,7 @@
 ## Libraries used in Terrain generation module and CellGame project
 
 ### 1) <a href="https://github.com/cocos2d/cocos2d-x"> cocos2d-x </a>
+### Warning: on win32 only MSVC is supported
 Multi-platform framework for building 2d games. 
 This framework was chosen due to my past experiance of using it. I didn't want to use some bigger game frameworks like unity/unreal  because of my will of creating game without using GUI creators on c++ to see how it behaves during developing of a game. I know about existence of Cocos Creator, but it supports c++ in a translation way. 
 
@@ -22,6 +23,7 @@ As a lack of functionality - no Discrete Distribution wrapper so I needed to use
 
 
 ### 4) <a href="https://github.com/dtschump/CImg"> CImg Library </a>
+### Warning: after many hours of search found out that CImg Library is not fully supported by MSVC compiler
 Header-only toolkit for image processing. 
 Has huge functional for image generation and transform, that was needed for my project. 
 After looking through a tutorial you can use basic functionality with ease.
